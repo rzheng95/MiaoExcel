@@ -15,7 +15,7 @@ import org.apache.poi.ss.usermodel.Cell;
 public class ShippingOrder 
 {
 	private final String CONSIGNEE = "CONSIGNEE:";
-	private int CONSIGNEE_ROW = 8, CONSIGNEE_COL = 0;
+	private final int CONSIGNEE_ROW = 8, CONSIGNEE_COL = 0;
 	
 	private final String NOTIFY = "NOTIFY: ";
 	private int NOTIFY_ROW = 15, NOTIFY_COL = 0;
@@ -37,6 +37,9 @@ public class ShippingOrder
 	private int SHIP_TO_ADDRESS_ROW = 35, SHIP_TO_ADDRESS_COL = 1;
 	private final String SELECTION_CRITERIA = "SELECTION CRITERIA:";
 	
+	private final int BILL_OF_LADING_REQUIREMENT_ROW = 14, BILL_OF_LADING_REQUIREMENT_COL = 5;
+	private final String ISSUE = "ISSUE";
+	private final String BL = "B/L";
 	
 	private final String QUANTITY = "";
 	
@@ -92,15 +95,14 @@ public class ShippingOrder
 	                
 					// split by whitespace
 	                String lines[] = pdfFileInText.split("\\r?\\n");
-	                for(int i = 0; i < lines.length; i++)
-	                	lines[i] = lines[i].toUpperCase();
+
 	                int i = 0;
 	                
 	                while ( i < lines.length )
 	                {
-	                	if (lines[i].contains(PO) && lines[i].contains(CPO))
+	                	if (lines[i].toUpperCase().contains(PO) && lines[i].toUpperCase().contains(CPO))
 	                	{
-	                		String[] arr = lines[i].split(" ");
+	                		String[] arr = lines[i].toUpperCase().split(" ");
 	                		cell = worksheet.getRow(PO_ROW).getCell(PO_COL);
 		           		 	cell.setCellValue(arr[0] + arr[1] + " " + arr[2]);
 		           		 	if(so_xls_path.isEmpty())
@@ -109,9 +111,9 @@ public class ShippingOrder
 		           		 	cell = worksheet.getRow(CPO_ROW).getCell(CPO_COL);
 		           		 	cell.setCellValue(arr[6] + arr[7] + " " + arr[8]);
 	                	}
-	                	else if (lines[i].contains(CONTAINER_SIZE))
+	                	else if (lines[i].toUpperCase().contains(CONTAINER_SIZE))
 	                	{             		
-	                		String size = lines[i].substring(lines[i].indexOf(CONTAINER_SIZE) + CONTAINER_SIZE.length()).trim();
+	                		String size = lines[i].toUpperCase().substring(lines[i].toUpperCase().indexOf(CONTAINER_SIZE) + CONTAINER_SIZE.length()).trim();
 
 	                		if (size.equalsIgnoreCase(_20)) {
 	                			cell = worksheet.getRow(x20_ROW).getCell(x20_COL);
@@ -125,103 +127,121 @@ public class ShippingOrder
 	                		} 
 	                		
 	                	}
-	                	else if (lines[i].contains(CONSIGNEE))
+	                	else if (lines[i].toUpperCase().contains(CONSIGNEE))
 	                	{
+	                		String str = lines[i].substring(CONSIGNEE.length()).trim();
 		            		// Access the second cell in second row to update the value
 		            		cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
 		            		// Get current cell value value and overwrite the value
-		           		 	cell.setCellValue(lines[i].substring(CONSIGNEE.length()).trim());
+		           		 	
 		           		 	i++;
-	                		while (!lines[i].contains(NOTIFY))
+	                		while (!lines[i].toUpperCase().contains(NOTIFY))
 	                		{
 	                			if (lines[i].trim().isEmpty())
 	                			{
 	                				i++;
 	                				continue;
 	                			}
-	                			CONSIGNEE_ROW++;
-		                		cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
-			           		 	cell.setCellValue(lines[i].trim());
+	                			str += "\n" + lines[i].trim();
 			           		 	i++;
 	                		}
 	                		i--;
+	                		cell.setCellValue(str);
 	                	}
-	                	else if (lines[i].contains(NOTIFY))
+	                	else if (lines[i].toUpperCase().contains(NOTIFY))
 	                	{
+	                		String str = lines[i].substring(NOTIFY.length()).trim();
 	                		cell = worksheet.getRow(NOTIFY_ROW).getCell(NOTIFY_COL);
-		           		 	cell.setCellValue(lines[i].substring(NOTIFY.length()).trim());
+		           		 	
 		           		 	i++;
-	                		while (!lines[i].contains(ALSO_NOTIFY))
+	                		while (!lines[i].toUpperCase().contains(ALSO_NOTIFY))
 	                		{
 	                			if (lines[i].trim().isEmpty())
 	                			{
 	                				i++;
 	                				continue;
 	                			}
-	                			NOTIFY_ROW++;
-		                		cell = worksheet.getRow(NOTIFY_ROW).getCell(NOTIFY_COL);
-			           		 	cell.setCellValue(lines[i].trim());
+	                			str += "\n" + lines[i].trim();
 			           		 	i++;
 	                		}
+	                		i--;
+	                		cell.setCellValue(str);
 	                	}
-	                	else if (lines[i].contains(PORT_OF_LOADING))
+	                	else if (lines[i].toUpperCase().contains(PORT_OF_LOADING))
 	                	{
 	                		cell = worksheet.getRow(PORT_OF_LOADING_ROW).getCell(PORT_OF_LOADING_COL);
-		           		 	cell.setCellValue(lines[i].substring(PORT_OF_LOADING.length()).trim());
+		           		 	cell.setCellValue(lines[i].toUpperCase().substring(PORT_OF_LOADING.length()).trim());
 	                	}
-	                	else if (lines[i].contains(PORT_OF_DISCHARGE))
+	                	else if (lines[i].toUpperCase().contains(PORT_OF_DISCHARGE))
 	                	{
 	                		cell = worksheet.getRow(PORT_OF_DISCHARGE_ROW).getCell(PORT_OF_DISCHARGE_COL);
-		           		 	cell.setCellValue(lines[i].substring(PORT_OF_DISCHARGE.length()).trim());
+		           		 	cell.setCellValue(lines[i].toUpperCase().substring(PORT_OF_DISCHARGE.length()).trim());
 		           		 	
 		           		 	cell = worksheet.getRow(SEA_AIR_ROW).getCell(SEA_AIR_COL);
-		           		 	if (lines[i].substring(PORT_OF_DISCHARGE.length()-1).contains(SEA_AIR)) 
+		           		 	if (lines[i].toUpperCase().substring(PORT_OF_DISCHARGE.length()-1).contains(SEA_AIR)) 
 			           		 	cell.setCellValue(SEA_AIR);
 		           		 	else
 		           		 	cell.setCellValue("AIR");
 	                	}
-	                	else if (lines[i].contains(DESTINATION))
+	                	else if (lines[i].toUpperCase().contains(DESTINATION))
 	                	{
 	                		cell = worksheet.getRow(DESTINATION_ROW).getCell(DESTINATION_COL);
-		           		 	cell.setCellValue(lines[i].substring(DESTINATION.length()).trim());
+		           		 	cell.setCellValue(lines[i].toUpperCase().substring(DESTINATION.length()).trim());
 	                	}
-	                	else if (lines[i].contains(SHIP_TO_ADDRESS))
+	                	else if (lines[i].toUpperCase().contains(SHIP_TO_ADDRESS))
 	                	{
+	                		String str = lines[i].substring(SHIP_TO_ADDRESS.length()).trim();
 	                		cell = worksheet.getRow(SHIP_TO_ADDRESS_ROW).getCell(SHIP_TO_ADDRESS_COL);
-		           		 	cell.setCellValue(lines[i].substring(SHIP_TO_ADDRESS.length()).trim());
 		           		 	
 		           		 	i++;
-	                		while (!lines[i].contains(SELECTION_CRITERIA))
+	                		while (!lines[i].toUpperCase().contains(SELECTION_CRITERIA))
 	                		{
 	                			if (lines[i].trim().isEmpty())
 	                			{
 	                				i++;
 	                				continue;
 	                			}
-	                			SHIP_TO_ADDRESS_ROW++;
-		                		cell = worksheet.getRow(SHIP_TO_ADDRESS_ROW).getCell(SHIP_TO_ADDRESS_COL);
-			           		 	cell.setCellValue(lines[i].trim());
+	                			str += "\n" + lines[i].trim();
 			           		 	i++;
 	                		}
+	                		i--;
+	                		cell.setCellValue(str);
 	                	}
-	                	else if (lines[i].contains(FORWARDER))
+	                	else if (lines[i].toUpperCase().contains(FORWARDER))
 	                	{
+	                		String str = lines[i].substring(FORWARDER.length()).trim();
 	                		cell = worksheet.getRow(FORWARDER_ROW).getCell(FORWARDER_COL);
-		           		 	cell.setCellValue(lines[i].substring(FORWARDER.length()).trim());
-		           		 	
+
 		           		 	i++;
-	                		while (!lines[i].contains(CARRIER))
+	                		while (!lines[i].toUpperCase().contains(CARRIER))
 	                		{
 	                			if (lines[i].trim().isEmpty())
 	                			{
 	                				i++;
 	                				continue;
 	                			}
-	                			FORWARDER_ROW++;
-		                		cell = worksheet.getRow(FORWARDER_ROW).getCell(FORWARDER_COL);
-			           		 	cell.setCellValue(lines[i].trim());
+	                			str += "\n" + lines[i].trim();
 			           		 	i++;
 	                		}
+	                		i--;
+	                		cell.setCellValue(str);
+	                	}
+	                	else if (lines[i].toUpperCase().contains(ISSUE) && lines[i].toUpperCase().contains(BL))
+	                	{
+	                		
+	                		String bolr = "";
+	                		if(lines[i].toUpperCase().contains(","))
+	                		{
+	                			String[] arr = lines[i].toUpperCase().split(",");
+	                			bolr = arr[0].trim();
+	                			if(bolr.contains(" ")) {
+	                				arr = bolr.split(" ");
+	                				if(arr.length > 2)
+	                					bolr = arr[1] + " " + arr[2];
+	                			}
+	                		}
+	                		cell = worksheet.getRow(BILL_OF_LADING_REQUIREMENT_ROW).getCell(BILL_OF_LADING_REQUIREMENT_COL);
+		           		 	cell.setCellValue(bolr);
 	                	}
 	                	
 	                	

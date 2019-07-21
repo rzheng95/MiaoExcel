@@ -16,7 +16,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-
+// Only 47 conversions left, limited to 50 for free account.
 public class PDFToExcel_PDFTables {
 	private static List<String> formats = Arrays.asList(new String[] { "csv", "xml", "xlsx-single", "xlsx-multiple" });
 
