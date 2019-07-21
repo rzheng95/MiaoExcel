@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -58,7 +57,7 @@ public class ShippingOrder
 	private final String _40HC = "40HC";
 	private final int x40HC_ROW = 18, x40HC_COL = 3;
 	
-	//Read the spreadsheet that needs to be updated
+	 //Read the spreadsheet that needs to be updated
 	 FileInputStream fsIP= new FileInputStream(new File("Shipping  Order Template.xls"));  
 	 //Access the workbook                  
 	 HSSFWorkbook wb = new HSSFWorkbook(fsIP);
@@ -68,9 +67,9 @@ public class ShippingOrder
 	 // declare a Cell object
 	 Cell cell = null;
 	 
-	 public ShippingOrder(String pdf_path, String pi_pdf_path, String so_xls_path) throws IOException
+	 public ShippingOrder(String si_pdf_path, String pi_pdf_path, String so_xls_path) throws IOException
 	 {
-		 this.run(pdf_path, pi_pdf_path, so_xls_path);
+		 this.run(si_pdf_path, pi_pdf_path, so_xls_path);
 	 }
 	
 	 public void run(String si_pdf_path, String pi_pdf_path, String so_xls_path) throws IOException 
