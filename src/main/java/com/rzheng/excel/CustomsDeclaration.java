@@ -2,14 +2,14 @@ package com.rzheng.excel;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Scanner;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
-import org.apache.pdfbox.io.RandomAccessFile;
-import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
@@ -17,30 +17,25 @@ import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-
-import io.github.jonathanlink.PDFLayoutTextStripper;
 
 public class CustomsDeclaration 
 {
-	private final String TOTAL = "TOTAL";
+	
+	private final int CONTRACT_DATE_ROW = 5, CONTRACT_DATE_COL = 5;
+
+	private final int INVOICE_DATE_ROW = 9, INVOICE_DATE_COL = 7;
+
+	private final int INVOICE_NUMBER_ROW = 3, INVOICE_NUMBER_COL = 5;
+
 	private final int QUANTITY_ROW = 15, QUANTITY_COL = 1;
-	
-	private final String SUB_TOTAL = "SUB TOTAL";
-	
-	private final String TOTAL_EXCL_TAX = "TOTAL EXCL. TAX";
+
 	private final int TOTAL_EXCL_TAX_ROW = 15, TOTAL_EXCL_TAX_COL = 6;
-	
-	private final String PO = "P.O.NO.";
-	private final int PO_SHEET = 1, PO_ROW = 8, PO_COL = 7;
-	
-	private final String CONSIGNEE = "CONSIGNEE:";
-	private int CONSIGNEE_SHEET = 1, CONSIGNEE_ROW = 7, CONSIGNEE_COL = 0;
-	private final String NOTIFY = "NOTIFY: ";
-	
-	private final String DESTINATION = "DESTINATION:";
-	private final int DESTINATION_SHEET = 1, DESTINATION_ROW = 12, DESTINATION_COL = 6;
+
+	private final int PO_ROW = 8, PO_COL = 7;
+
+	private int CONSIGNEE_ROW = 7, CONSIGNEE_COL = 0;
+
+	private final int DESTINATION_ROW = 12, DESTINATION_COL = 6;
 	
 	// Read the spreadsheet that needs to be updated
 	FileInputStream fileInput = new FileInputStream(new File("Customs Declaration Template.xls"));
@@ -51,15 +46,48 @@ public class CustomsDeclaration
 
 	// declare a Cell object
 	Cell cell = null;
+	
+	
 
-	public CustomsDeclaration(String si_pdf_path, String pi_pdf_path, String cd_xls_path) throws IOException
+	public CustomsDeclaration(String si_pdf_path, String pi_pdf_path, String cd_xls_path, String invoiceNumber) throws IOException
 	{
-		if(!si_pdf_path.isEmpty() && !pi_pdf_path.isEmpty())
-			this.contract(si_pdf_path, pi_pdf_path, cd_xls_path);
+		if(!si_pdf_path.isEmpty() && !pi_pdf_path.isEmpty()) {
+			this.contract(si_pdf_path, pi_pdf_path, cd_xls_path, invoiceNumber);
+		}
+			
 	}
 	
-	public void contract(String si_pdf_path, String pi_pdf_path, String cd_xls_path) throws IOException
+	public void contract(String si_pdf_path, String pi_pdf_path, String cd_xls_path, String invoiceNumber) throws IOException
 	{
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date current_date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(current_date);
+        calendar.add(Calendar.MONTH, -2);
+        
+        Date two_months_ago = calendar.getTime();
+        
+        String invoice_date = dateFormat.format(current_date);
+        String contract_date = dateFormat.format(two_months_ago);
+        
+
+        if (invoiceNumber.trim().isEmpty()) {
+        	invoiceNumber = "INYB" + invoice_date;
+        }
+        worksheet = workbook.getSheet(Constants.CONTRACT);
+        cell = worksheet.getRow(INVOICE_NUMBER_ROW).getCell(INVOICE_NUMBER_COL);
+		cell.setCellValue(invoiceNumber);
+		
+        cell = worksheet.getRow(CONTRACT_DATE_ROW).getCell(CONTRACT_DATE_COL);
+		cell.setCellValue(contract_date);
+		
+		worksheet = workbook.getSheet(Constants.INVOICE);
+        cell = worksheet.getRow(INVOICE_DATE_ROW).getCell(INVOICE_DATE_COL);
+		cell.setCellValue(invoice_date);
+		
+        
+        
+        
 		try (PDDocument pi = PDDocument.load(new File(pi_pdf_path));
 				PDDocument si = PDDocument.load(new File(si_pdf_path))) {
 			pi.getClass();
@@ -74,45 +102,44 @@ public class CustomsDeclaration
 
 				String piText = tStripper.getText(pi);
 				String siText = tStripper.getText(si);
-				
-				
+				System.out.println(siText);
 				// SI
 				String[] lines = siText.split("\\r?\\n");
-				for (int i = 0; i < lines.length; i++)
-					lines[i] = lines[i].toUpperCase();
 				int i = 0;
 				
-				while (i < lines.length) {
-
-					worksheet = workbook.getSheetAt(0);
-					if(lines[i].contains(CONSIGNEE)) {
-
-						worksheet = workbook.getSheetAt(CONSIGNEE_SHEET);
-						// Access the second cell in second row to update the value
+				while ( i < lines.length ) {
+//					System.out.println(lines[i]);
+					worksheet = workbook.getSheet(Constants.INVOICE);
+					if(lines[i].toUpperCase().contains(Constants.CONSIGNEE)) {
+						String str = lines[i].substring(Constants.CONSIGNEE.length()).trim();
+	            		// Access the second cell in second row to update the value
 	            		cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
 	            		// Get current cell value value and overwrite the value
-	           		 	cell.setCellValue(lines[i].substring(CONSIGNEE.length()).trim());
+	           		 	
 	           		 	i++;
-                		while (!lines[i].contains(NOTIFY))
+                		while (!lines[i].toUpperCase().contains(Constants.NOTIFY))
                 		{
                 			if (lines[i].trim().isEmpty())
                 			{
                 				i++;
                 				continue;
                 			}
-                			CONSIGNEE_ROW++;
-	                		cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
-		           		 	cell.setCellValue(lines[i].trim());
-
+                			str += "\n" + lines[i].trim();
 		           		 	i++;
                 		}
                 		i--;
+                		cell.setCellValue(str);
 					}
-					else if (lines[i].contains(DESTINATION)) {
-						worksheet = workbook.getSheetAt(DESTINATION_SHEET);
-						String city = lines[i].substring(DESTINATION.length()).trim();
-						if(city.contains(",")) {
+					else if (lines[i].toUpperCase().contains(Constants.DESTINATION)) {
+						System.out.println(lines[i]);
+						worksheet = workbook.getSheet(Constants.INVOICE);
+						String city = lines[i].substring(Constants.DESTINATION.length()).trim();
+						System.out.println(city);
+						if (city.contains(",")) {
 							String[] arr = city.split(",");
+							city = arr[0].trim();	
+						} else if  (city.contains("-")) {
+							String[] arr = city.split("-");
 							city = arr[0].trim();	
 						}
 						
@@ -136,10 +163,10 @@ public class CustomsDeclaration
 					
 					worksheet = workbook.getSheetAt(0);
 					
-					if (lines[i].contains(TOTAL)) {
-						if (lines[i].contains(TOTAL_EXCL_TAX)) {
+					if (lines[i].contains(Constants.TOTAL)) {
+						if (lines[i].contains(Constants.TOTAL_EXCL_TAX)) {
 		            		cell = worksheet.getRow(TOTAL_EXCL_TAX_ROW).getCell(TOTAL_EXCL_TAX_COL);
-		            		double amount = extractNumberFromString(lines[i].substring(TOTAL_EXCL_TAX.length()));
+		            		double amount = extractNumberFromString(lines[i].substring(Constants.TOTAL_EXCL_TAX.length()));
 		           		 	cell.setCellValue(amount);
 //		            		cell.setCellType(CellType.NUMERIC);
 //		            		CellStyle cs = wb.createCellStyle();
@@ -152,7 +179,7 @@ public class CustomsDeclaration
 		           		 	i++;
 		           		 	continue;
 		           		 	
-						} else if (lines[i].contains(SUB_TOTAL)) {
+						} else if (lines[i].contains(Constants.SUB_TOTAL)) {
 							i++;
 							continue;
 						}
@@ -161,10 +188,10 @@ public class CustomsDeclaration
 						cell.setCellValue(Integer.parseInt(arr[arr.length-1].trim()));
 
 					}
-					else if (lines[i].contains(PO))
+					else if (lines[i].contains(Constants.PI_PO))
 					{
-						String po_num = lines[i].substring(lines[i].indexOf(PO) + PO.length()).trim();
-						worksheet = workbook.getSheetAt(PO_SHEET);
+						String po_num = lines[i].substring(lines[i].indexOf(Constants.PI_PO) + Constants.PI_PO.length()).trim();
+						worksheet = workbook.getSheet(Constants.INVOICE);
 						cell = worksheet.getRow(PO_ROW).getCell(PO_COL);
 						cell.setCellValue(po_num);
 					}
@@ -175,6 +202,12 @@ public class CustomsDeclaration
 			}
 
 		}
+		
+		if (cd_xls_path.trim().isEmpty()) {
+        	cd_xls_path = invoiceNumber + " " ; // + PO
+        }
+		
+		// refreshes all formulas existed in the spreadsheet
 		HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
 		// Close the InputStream
 		fileInput.close();
@@ -196,6 +229,12 @@ public class CustomsDeclaration
 		amount = amount.replaceAll("\\$", "").trim();
 		amount = amount.replaceAll(",", "").trim();
 		return Double.parseDouble(amount);
+	}
+	
+	private boolean checkStop(String line) {
+		
+		return (line.contains(Constants.DESTINATION) || line.contains(Constants.NOTIFY) || line.contains(Constants.ALSO_NOTIFY)); 
+			
 	}
 	
 	private boolean countDollarSign(String line, int countThreshold) {

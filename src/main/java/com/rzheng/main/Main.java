@@ -10,7 +10,7 @@ public class Main
 {
 	public static void main(String[] args) throws IOException 
 	{	
-		ShippingOrder so = new ShippingOrder("SI.pdf", "", "");
-//		CustomsDeclaration cd = new CustomsDeclaration("SI.pdf", "PI.pdf", "test");
+//		ShippingOrder so = new ShippingOrder("051488 SI.pdf", "", "");
+		CustomsDeclaration cd = new CustomsDeclaration("052059 SI.pdf", "052059 PI.pdf", "", "INYB2019US0449");
 	}
 }
