@@ -214,7 +214,8 @@ public class CustomsDeclaration
 				}
 
 			}
-
+			si.close();
+			pi.close();
 		}
 		
 		if (cd_xls_path.trim().isEmpty()) {

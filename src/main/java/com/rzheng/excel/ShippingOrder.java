@@ -10,6 +10,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 
 public class ShippingOrder 
@@ -42,6 +43,8 @@ public class ShippingOrder
 
 	private final int x40HC_ROW = 18, x40HC_COL = 3;
 	
+	private final int QUANTITY_ROW = 25, QUANTITY_COL = 2;
+	
 	 //Read the spreadsheet that needs to be updated
 	 FileInputStream fsIP= new FileInputStream(new File("Shipping  Order Template.xls"));  
 	 //Access the workbook                  
@@ -52,12 +55,12 @@ public class ShippingOrder
 	 // declare a Cell object
 	 Cell cell = null;
 	 
-	 public ShippingOrder(String si_pdf_path, String pi_pdf_path, String so_xls_path) throws IOException
+	 public ShippingOrder() throws IOException, InvalidFormatException
 	 {
-		 this.run(si_pdf_path, pi_pdf_path, so_xls_path);
+
 	 }
 	
-	 public void run(String si_pdf_path, String pi_pdf_path, String so_xls_path) throws IOException 
+	 public String run(String si_pdf_path, String pi_pdf_path, String so_xls_path) throws IOException, InvalidFormatException 
 	 {
 
 		 try (PDDocument document = PDDocument.load(new File(si_pdf_path))) 
@@ -255,29 +258,86 @@ public class ShippingOrder
 	                	i++;
 	                }                
 	            }
+	            
+	            document.close();
 	        }
 		 
 
-		 
+		 // PI
 		 String pi = Util.read(pi_pdf_path);
+		 
 		 String[] lines = pi.split("\\r?\\n");
 		 int i = 0;
 		 
+		 // remove extra spaces
+		 while ( i < lines.length ) {
+			 lines[i] = lines[i].trim().replaceAll(" +", " ");
+			 i++;
+		 }
+		 
+		 i = 0;
+		 
 		 while ( i < lines.length ) {
 			
-
-			 if (Util.countString(lines[i], "$", 2))
+			 // U3446-20- Silver Sofa KD / KD sofa argent 9401.61 67.80 24 $314.00 $7,536.00
+			 if (Util.countString(lines[i], "$", 2) && Util.countString(lines[i], "-", 2))
 			 {
-
-				 String item = lines[i].trim().replaceAll(" +", " ");
-				 System.out.println("\n"+item);
+				 
+				 String item = lines[i];
 				 String[] arr = item.split(" ");
 				 
-				 for(String s : arr)
-					 System.out.print(s + " ");
+				 String itemNum = arr[0];
+				 int quantity = Integer.parseInt(arr[arr.length-3]);
 				 
+				 
+				 i++;
+				 arr = lines[i].split(" ");
+				 itemNum += arr[0];
+//				 System.out.println(itemNum);
+				 
+				 String[] modelNum = Util.fetchModel(itemNum);
+
+				 if(modelNum != null) {
+					 
+					 Util.fetchStats(modelNum[0].substring(0, 6), modelNum[1], quantity);
+
+				 } else {
+					 return "ERROR: Can not find item number " + itemNum + "\n错误： 找不到客户型号" + itemNum;
+				 }
 				 
 			 }
+			 if (lines[i].contains(Constants.TOTAL)) {
+				 
+					if (lines[i].contains(Constants.TOTAL_EXCL_TAX)) {
+	           		 	i++;
+	           		 	continue;
+	           		 	
+					} else if (lines[i].contains(Constants.SUB_TOTAL)) {
+						i++;
+						continue;
+					}
+					
+					// TOTAL 2388.96 48
+					String[] arr = lines[i].split(" ");
+					
+					if(arr.length == 3) {
+						cell = worksheet.getRow(QUANTITY_ROW).getCell(QUANTITY_COL);
+						cell.setCellValue(Integer.parseInt(arr[arr.length-1]));
+					}
+
+				}
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
 			 i++;
 		 }
 		 
@@ -298,6 +358,8 @@ public class ShippingOrder
 		 wb.write(output_file);
 		 //close the stream
 		 output_file.close();
+		 
+		 return "Success!";
 	}
 	
 }
