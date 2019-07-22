@@ -8,8 +8,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
@@ -33,9 +31,11 @@ public class CustomsDeclaration
 
 	private final int PO_ROW = 8, PO_COL = 7;
 
-	private int CONSIGNEE_ROW = 7, CONSIGNEE_COL = 0;
+	private final int CONSIGNEE_ROW = 7, CONSIGNEE_COL = 0;
 
 	private final int DESTINATION_ROW = 12, DESTINATION_COL = 6;
+	
+	private final int RECIPIENT_SHEET = 4, RECIPIENT_ROW = 5, RECIPIENT_COL = 0;
 	
 	// Read the spreadsheet that needs to be updated
 	FileInputStream fileInput = new FileInputStream(new File("Customs Declaration Template.xls"));
@@ -59,7 +59,7 @@ public class CustomsDeclaration
 	
 	public void contract(String si_pdf_path, String pi_pdf_path, String cd_xls_path, String invoiceNumber) throws IOException
 	{
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Date current_date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(current_date);
@@ -102,22 +102,30 @@ public class CustomsDeclaration
 
 				String piText = tStripper.getText(pi);
 				String siText = tStripper.getText(si);
-				System.out.println(siText);
+//				System.out.println(siText);
 				// SI
 				String[] lines = siText.split("\\r?\\n");
 				int i = 0;
 				
 				while ( i < lines.length ) {
-//					System.out.println(lines[i]);
-					worksheet = workbook.getSheet(Constants.INVOICE);
+
+					worksheet = workbook.getSheetAt(0);
+					
 					if(lines[i].toUpperCase().contains(Constants.CONSIGNEE)) {
+						
 						String str = lines[i].substring(Constants.CONSIGNEE.length()).trim();
-	            		// Access the second cell in second row to update the value
+						
+						worksheet = workbook.getSheetAt(RECIPIENT_SHEET);
+                		cell = worksheet.getRow(RECIPIENT_ROW).getCell(RECIPIENT_COL);
+                		cell.setCellValue(str);
+						
+	            		
+                		worksheet = workbook.getSheet(Constants.INVOICE);
 	            		cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
-	            		// Get current cell value value and overwrite the value
+
 	           		 	
 	           		 	i++;
-                		while (!lines[i].toUpperCase().contains(Constants.NOTIFY))
+                		while (!Util.checkEndLine(lines[i].toUpperCase()))
                 		{
                 			if (lines[i].trim().isEmpty())
                 			{
@@ -129,20 +137,26 @@ public class CustomsDeclaration
                 		}
                 		i--;
                 		cell.setCellValue(str);
+                		
+                		
+                		
 					}
 					else if (lines[i].toUpperCase().contains(Constants.DESTINATION)) {
-						System.out.println(lines[i]);
+
 						worksheet = workbook.getSheet(Constants.INVOICE);
 						String city = lines[i].substring(Constants.DESTINATION.length()).trim();
-						System.out.println(city);
+
 						if (city.contains(",")) {
 							String[] arr = city.split(",");
 							city = arr[0].trim();	
 						} else if  (city.contains("-")) {
 							String[] arr = city.split("-");
 							city = arr[0].trim();	
+						} else if  (city.contains("–")) {
+							String[] arr = city.split("–");
+							city = arr[0].trim();	
 						}
-						
+
 						cell = worksheet.getRow(DESTINATION_ROW).getCell(DESTINATION_COL);
 	           		 	cell.setCellValue(city);
 					}
@@ -230,27 +244,7 @@ public class CustomsDeclaration
 		amount = amount.replaceAll(",", "").trim();
 		return Double.parseDouble(amount);
 	}
-	
-	private boolean checkStop(String line) {
-		
-		return (line.contains(Constants.DESTINATION) || line.contains(Constants.NOTIFY) || line.contains(Constants.ALSO_NOTIFY)); 
-			
-	}
-	
-	private boolean countDollarSign(String line, int countThreshold) {
-		int count = 0;
-		StringBuilder sb = new StringBuilder(line);
-		for (int i = 0; i < countThreshold; i++) {
-			if(sb.indexOf("$") != -1) {
-				sb = sb.deleteCharAt(line.indexOf('$'));
-				count++;
-			}
-			if(count >= countThreshold)
-				return true;
-			
-		}
-		return false;	
-	}
+
 }
 
 

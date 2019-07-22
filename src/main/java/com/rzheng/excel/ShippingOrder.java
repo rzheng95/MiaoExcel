@@ -82,16 +82,29 @@ public class ShippingOrder
 	                
 	                while ( i < lines.length )
 	                {
-	                	if (lines[i].toUpperCase().contains(Constants.PO) && lines[i].toUpperCase().contains(Constants.CPO))
+	                	if (lines[i].toUpperCase().contains(Constants.PO) && lines[i].toUpperCase().contains(Constants.CO) && lines[i].toUpperCase().contains(Constants.CPO))
 	                	{
-	                		String[] arr = lines[i].toUpperCase().split(" ");
+	                		// ex: PO # 052059 CO # : 1001314 CPO # : DOM#65347
+	                		int co_index = lines[i].toUpperCase().indexOf(Constants.CO);
+	                		int cpo_inedx = lines[i].toUpperCase().indexOf(Constants.CPO);
+	                		String po = lines[i].toUpperCase().substring(0, co_index).trim();
+	                		String cpo = lines[i].toUpperCase().substring(cpo_inedx).trim();
+	                		
+	                		
+
 	                		cell = worksheet.getRow(PO_ROW).getCell(PO_COL);
-		           		 	cell.setCellValue(arr[0] + arr[1] + " " + arr[2]);
-		           		 	if(so_xls_path.isEmpty())
-		           		 		so_xls_path = "Shipping Order " + arr[2] + ".xls";
-		           		 		
+		           		 	cell.setCellValue(po);
+		           		 	
 		           		 	cell = worksheet.getRow(CPO_ROW).getCell(CPO_COL);
-		           		 	cell.setCellValue(arr[6] + arr[7] + " " + arr[8]);
+		           		 	cell.setCellValue(cpo);
+		           		 	
+		           		 	if(so_xls_path.isEmpty())
+		           		 	{
+		           		 		String[] arr = po.split(" ");
+		           		 		so_xls_path = "Shipping Order " + arr[arr.length-1].trim() + ".xls";
+		           		 	}
+		           		 	
+		           		 	
 	                	}
 	                	else if (lines[i].toUpperCase().contains(Constants.CONTAINER_SIZE))
 	                	{             		
@@ -117,7 +130,7 @@ public class ShippingOrder
 		            		// Get current cell value value and overwrite the value
 		           		 	
 		           		 	i++;
-	                		while (!lines[i].toUpperCase().contains(Constants.NOTIFY))
+	                		while (!Util.checkEndLine(lines[i].toUpperCase()))
 	                		{
 	                			if (lines[i].trim().isEmpty())
 	                			{
@@ -132,11 +145,20 @@ public class ShippingOrder
 	                	}
 	                	else if (lines[i].toUpperCase().contains(Constants.NOTIFY))
 	                	{
+	                		if (lines[i].toUpperCase().contains(Constants.ALSO_NOTIFY)) {
+	                			i++;
+	                			continue;
+	                		}
+	                		if (lines[i].toUpperCase().contains(Constants._2ND_NOTIFY)) {
+	                			i++;
+	                			continue;
+	                		}
+	                		
 	                		String str = lines[i].substring(Constants.NOTIFY.length()).trim();
 	                		cell = worksheet.getRow(NOTIFY_ROW).getCell(NOTIFY_COL);
-		           		 	
+	                		
 		           		 	i++;
-	                		while (!lines[i].toUpperCase().contains(Constants.ALSO_NOTIFY))
+	                		while (!Util.checkEndLine(lines[i].toUpperCase()))
 	                		{
 	                			if (lines[i].trim().isEmpty())
 	                			{
@@ -174,10 +196,12 @@ public class ShippingOrder
 	                	{
 	                		String str = lines[i].substring(Constants.SHIP_TO_ADDRESS.length()).trim();
 	                		cell = worksheet.getRow(SHIP_TO_ADDRESS_ROW).getCell(SHIP_TO_ADDRESS_COL);
-		           		 	
+//                			System.out.println(lines[i]);
+
 		           		 	i++;
-	                		while (!lines[i].toUpperCase().contains(Constants.SELECTION_CRITERIA))
+	                		while (!Util.checkEndLine(lines[i].toUpperCase()))
 	                		{
+//	                			System.out.println(lines[i]);
 	                			if (lines[i].trim().isEmpty())
 	                			{
 	                				i++;
@@ -195,7 +219,7 @@ public class ShippingOrder
 	                		cell = worksheet.getRow(FORWARDER_ROW).getCell(FORWARDER_COL);
 
 		           		 	i++;
-	                		while (!lines[i].toUpperCase().contains(Constants.CARRIER))
+	                		while (!Util.checkEndLine(lines[i].toUpperCase()))
 	                		{
 	                			if (lines[i].trim().isEmpty())
 	                			{
@@ -229,11 +253,36 @@ public class ShippingOrder
 	                	
 	                	
 	                	i++;
-	                }
-	
+	                }                
 	            }
-	
 	        }
+		 
+
+		 
+		 String pi = Util.read(pi_pdf_path);
+		 String[] lines = pi.split("\\r?\\n");
+		 int i = 0;
+		 
+		 while ( i < lines.length ) {
+			
+
+			 if (Util.countString(lines[i], "$", 2))
+			 {
+
+				 String item = lines[i].trim().replaceAll(" +", " ");
+				 System.out.println("\n"+item);
+				 String[] arr = item.split(" ");
+				 
+				 for(String s : arr)
+					 System.out.print(s + " ");
+				 
+				 
+			 }
+			 i++;
+		 }
+		 
+		 
+		 
 		 
 		 //Close the InputStream  
 		 fsIP.close(); 

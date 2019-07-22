@@ -6,6 +6,7 @@ public final class Constants
 	public static final String CONSIGNEE = "CONSIGNEE:";
 	public static final String NOTIFY = "NOTIFY:";
 	public static final String ALSO_NOTIFY = "ALSO NOTIFY:";
+	public static final String _2ND_NOTIFY = "2ND NOTIFY:";
 	public static final String PORT_OF_DISCHARGE = "PORT OF DISCHARGE:";
 	public static final String PORT_OF_LOADING = "PORT OF LOADING:";
 	public static final String DESTINATION = "DESTINATION:";
@@ -17,6 +18,7 @@ public final class Constants
 	
 	
 	public static final String PO = "PO #";
+	public static final String CO = "CO #";
 	public static final String CPO = "CPO #";
 	
 	public static final String _20 = "20";
@@ -36,6 +38,7 @@ public final class Constants
 	public static final String TOTAL_EXCL_TAX = "TOTAL EXCL. TAX";
 	public static final String PI_PO = "P.O.NO.";
 
+	
 }
 
 
