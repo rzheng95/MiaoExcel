@@ -18,7 +18,7 @@ public class Main
 		// 051487 X
 		// 051338 
 		// 051336
-		String so_error = new ShippingOrder().run("052059 SI.pdf", "052059 PI.pdf", "so.xls");
+		String so_error = new ShippingOrder().run("052059 SI.pdf", "052059 PI.pdf", "testting");
 		System.out.println(so_error);
 
 //		CustomsDeclaration cd = new CustomsDeclaration("052059 SI.pdf", "052059 PI.pdf", "", "INYB2019US0449");

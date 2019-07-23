@@ -2,8 +2,10 @@ package com.rzheng.excel;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -53,8 +55,6 @@ public class ShippingOrder {
 
 	private String error = "";
 	
-	private boolean model_not_found_error = false;
-
 	// Read the spreadsheet that needs to be updated
 	FileInputStream fsIP = new FileInputStream(new File("Shipping  Order Template.xls"));
 	// Access the workbook
@@ -69,8 +69,7 @@ public class ShippingOrder {
 
 	}
 
-	public String run(String si_pdf_path, String pi_pdf_path, String so_xls_path)
-			throws IOException, InvalidFormatException {
+	public String run(String si_pdf_path, String pi_pdf_path, String so_xls_path) throws IOException {
 		
 		ShipmentInformation si = new ShipmentInformation(si_pdf_path);
 		
@@ -155,6 +154,11 @@ public class ShippingOrder {
 		String poNumber = si.getPoNumber();
 		if(poNumber != null) {
 			cell.setCellValue(poNumber);
+			if (so_xls_path.trim().isEmpty()) {
+				String[] arr = poNumber.split(" ");
+				if(arr != null && arr.length == 3)
+					so_xls_path = "Shipping Order " + arr[2]; // + PO
+	        }
 		} else {
 			error = "ERROR: PO # not found.\n" +
 					"错误： 找不到PO #.\n";
@@ -190,98 +194,47 @@ public class ShippingOrder {
 		
 		
 		
-
-		// PI
-		String pi = Util.read(pi_pdf_path);
-
-		String[] lines = pi.split("\\r?\\n");
-		int i = 0;
-
-		// remove extra spaces
-		while (i < lines.length) {
-			lines[i] = lines[i].trim().replaceAll(" +", " ");
-			i++;
-		}
-
-		i = 0;
-
-//		double totalNetWeight = 0;
-		double totalGrossWeight = 0;
-		double totalVolume = 0;
-		int totalQuantity = 0;
-
-		while (i < lines.length) {
-
-			// U3446-20- Silver Sofa KD / KD sofa argent 9401.61 67.80 24 $314.00 $7,536.00
-			if (Util.countString(lines[i], "$", 2) && Util.countString(lines[i], "-", 2)) {
-
-				String item = lines[i];
-				String[] arr = item.split(" ");
-
-				String itemNum = arr[0];
-				int quantity = Integer.parseInt(arr[arr.length - 3]);
-				totalQuantity += quantity;
-
-				i++;
-				arr = lines[i].split(" ");
-				itemNum += arr[0];
-
-				String[] models = Util.fetchModel(itemNum);
-
-				if (models != null) {
-
-					double[] stats = Util.fetchStats(models[0].substring(0, 6), models[1], quantity);
-					
-					if (stats != null && stats.length == 3) {
-//						totalNetWeight += stats[0];
-						totalGrossWeight += stats[1];
-						totalVolume += stats[2];
-					} else {
-						this.model_not_found_error = true;
-						this.error += "ERROR: model number " + models[0].substring(0, 6) + " cannot be found\n"
-								+ "错误： 找不到艺贝型号" + models[0].substring(0, 6) + "\n";
-					}
-
-				} else {
-					
-					this.error += "ERROR: item number " + itemNum + " cannot be found\n"
-							+ "错误： 找不到客户型号" + itemNum + "\n";
-				}
-
-			}
-
-
-			i++;
-		}
+		/*
+		 * PI
+		 * 
+		*/
+		ProformaInvoice pi = new ProformaInvoice(pi_pdf_path);
 		
-		if(!this.model_not_found_error) {
-			cell = worksheet.getRow(GROSS_WEIGHT_ROW).getCell(GROSS_WEIGHT_COL);
-			cell.setCellValue(totalGrossWeight);
-
-			cell = worksheet.getRow(MEASUREMENT_ROW).getCell(MEASUREMENT_COL);
-			cell.setCellValue(totalVolume + " CBM");	
-		} else {
-			CellStyle backgroundStyle = wb.createCellStyle();
-			backgroundStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
-			backgroundStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); 
-			cell = worksheet.getRow(GROSS_WEIGHT_ROW).getCell(GROSS_WEIGHT_COL);
-			cell.setCellStyle(backgroundStyle);
+		List<Object> stats = pi.getStats(pi.getItems());
+		
+		if (stats != null) {
 			
-			cell = worksheet.getRow(MEASUREMENT_ROW).getCell(MEASUREMENT_COL);
-			cell.setCellStyle(backgroundStyle);
+			if (stats.get(Constants.ERROR_CODE_INDEX).toString().isEmpty()) {
+				cell = worksheet.getRow(QUANTITY_ROW).getCell(QUANTITY_COL);
+				cell.setCellValue(Integer.parseInt(stats.get(Constants.TOTAL_QUANTITY_INDEX).toString()));
+				
+				cell = worksheet.getRow(GROSS_WEIGHT_ROW).getCell(GROSS_WEIGHT_COL);
+				cell.setCellValue(Double.parseDouble(stats.get(Constants.TOTAL_GROSS_WEIGHT_INDEX).toString()));
+				
+				cell = worksheet.getRow(MEASUREMENT_ROW).getCell(MEASUREMENT_COL);
+				cell.setCellValue(stats.get(Constants.TOTAL_VOLUME_INDEX).toString() + " CBM");
+			} else {
+				error = stats.get(Constants.ERROR_CODE_INDEX).toString();
+				
+				CellStyle backgroundStyle = wb.createCellStyle();
+				backgroundStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+				backgroundStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				cell = worksheet.getRow(QUANTITY_ROW).getCell(QUANTITY_COL);
+				cell.setCellStyle(backgroundStyle);
+				
+				cell = worksheet.getRow(GROSS_WEIGHT_ROW).getCell(GROSS_WEIGHT_COL);
+				cell.setCellStyle(backgroundStyle);
+				
+				cell = worksheet.getRow(MEASUREMENT_ROW).getCell(MEASUREMENT_COL);
+				cell.setCellStyle(backgroundStyle);
+			}
 		}
 		
-		cell = worksheet.getRow(QUANTITY_ROW).getCell(QUANTITY_COL);
-		cell.setCellValue(totalQuantity);
-		
-
+	
 		// Close the InputStream
 		fsIP.close();
-
-		if (!so_xls_path.contains(".xls") && !so_xls_path.isEmpty())
-			so_xls_path = so_xls_path + ".xls";
-		if (so_xls_path.contains(".xlsx"))
-			so_xls_path = so_xls_path.substring(0, so_xls_path.length() - 1);
+		
+		so_xls_path = Util.correctXlsFilename(so_xls_path);
 
 		// Open FileOutputStream to write updates
 		FileOutputStream output_file = new FileOutputStream(new File(so_xls_path));

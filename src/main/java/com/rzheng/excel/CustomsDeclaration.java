@@ -227,10 +227,7 @@ public class CustomsDeclaration
 		// Close the InputStream
 		fileInput.close();
 
-		if (!cd_xls_path.contains(".xls") && !cd_xls_path.isEmpty())
-			cd_xls_path = cd_xls_path + ".xls";
-		if (cd_xls_path.contains(".xlsx"))
-			cd_xls_path = cd_xls_path.substring(0, cd_xls_path.length() - 1);
+		cd_xls_path = Util.correctXlsFilename(cd_xls_path);
 
 		// Open FileOutputStream to write updates
 		FileOutputStream output_file = new FileOutputStream(new File(cd_xls_path));

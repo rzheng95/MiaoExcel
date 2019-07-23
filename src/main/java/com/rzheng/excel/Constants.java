@@ -38,7 +38,20 @@ public final class Constants
 	public static final String SUB_TOTAL = "SUB TOTAL";
 	public static final String TOTAL_EXCL_TAX = "TOTAL EXCL. TAX";
 	public static final String PI_PO = "P.O.NO.";
+	
+	// PI stats
+	public static final int TOTAL_QUANTITY_INDEX = 0;
+	public static final int TOTAL_NET_WEIGHT_INDEX = 1;
+	public static final int TOTAL_GROSS_WEIGHT_INDEX = 2;
+	public static final int TOTAL_VOLUME_INDEX = 3;
+	public static final int ERROR_CODE_INDEX = 4;
 
+	// Errors
+	public static final int NO_ERROR = -1;
+	public static final int ERROR_ITEM_NUMBER_NOT_FOUND = 1;
+	public static final int ERROR_MODEL_NUMBER_NOT_FOUND = 2;
+	
+	
 	
 }
 

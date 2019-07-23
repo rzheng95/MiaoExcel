@@ -60,6 +60,14 @@ public final class Util {
 		return false;	
 	}
 	
+	public static String correctXlsFilename(String xls_filename) {
+		if (!xls_filename.contains(".xls") && !xls_filename.isEmpty())
+			xls_filename = xls_filename + ".xls";
+		if (xls_filename.contains(".xlsx"))
+			xls_filename = xls_filename.substring(0, xls_filename.length() - 1);
+		return xls_filename;
+	}
+	
 	public static String read(String pdf_path) {
 		String text = null;
         try {
