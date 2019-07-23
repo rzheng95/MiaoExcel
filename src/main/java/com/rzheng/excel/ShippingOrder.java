@@ -53,23 +53,35 @@ public class ShippingOrder {
 
 	private final int MEASUREMENT_ROW = 25, MEASUREMENT_COL = 6;
 
-	private String error = "";
-	
 	// Read the spreadsheet that needs to be updated
-	FileInputStream fsIP = new FileInputStream(new File("Shipping  Order Template.xls"));
+	private FileInputStream fsIP;
 	// Access the workbook
-	HSSFWorkbook wb = new HSSFWorkbook(fsIP);
+	private HSSFWorkbook wb;
 	// Access the worksheet, so that we can update / modify it.
-	HSSFSheet worksheet = wb.getSheetAt(0);
-
+	private HSSFSheet worksheet;
 	// declare a Cell object
-	Cell cell = null;
+	private Cell cell;
+	
+	private String error;
+	private String si_pdf_path;
+	private String pi_pdf_path;
+	private String so_xls_path;
+	private String si_template;
 
-	public ShippingOrder() throws IOException, InvalidFormatException {
-
+	public ShippingOrder(String si_pdf_path, String pi_pdf_path, String so_xls_path, String si_template) throws IOException, InvalidFormatException {
+		this.error = "";
+		this.si_pdf_path = si_pdf_path;
+		this.pi_pdf_path = pi_pdf_path;
+		this.so_xls_path = so_xls_path;
+		this.si_template = si_template;
+		
+		this.cell = null;
+		this.fsIP = new FileInputStream(new File(si_template));
+		this.wb = new HSSFWorkbook(fsIP);
+		this.worksheet = wb.getSheetAt(0);
 	}
 
-	public String run(String si_pdf_path, String pi_pdf_path, String so_xls_path) throws IOException {
+	public String run() throws IOException {
 		
 		ShipmentInformation si = new ShipmentInformation(si_pdf_path);
 		
@@ -190,6 +202,16 @@ public class ShippingOrder {
 		} else {
 			error = "ERROR: Container size not found.\n" +
 					"错误： 找不到Container size.\n";
+		}
+		
+		// Bill of Lading Requirement
+		cell = worksheet.getRow(BILL_OF_LADING_REQUIREMENT_ROW).getCell(BILL_OF_LADING_REQUIREMENT_COL);
+		String billOfLading = si.getBillOfLadingRequirement();
+		if(billOfLading != null) {
+			cell.setCellValue(billOfLading);
+		} else {
+			error = "ERROR: Bill of Lading Requirement not found.\n" +
+					"错误： 找不到Bill of Lading Requirement.\n";
 		}
 		
 		

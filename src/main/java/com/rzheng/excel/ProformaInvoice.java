@@ -10,12 +10,13 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 public class ProformaInvoice {
 	public static void main(String[] args) {
 		ProformaInvoice pi = new ProformaInvoice("052059 PI.pdf");
-		List<Item> items = pi.getItems();
-		List<Object> stats = pi.getStats(items);
-		for (Object s : stats)
-		{
-			System.out.println(s);
-		}
+//		List<Item> items = pi.getItems();
+//		List<Object> stats = pi.getStats(items);
+//		for (Object s : stats)
+//		{
+//			System.out.println(s);
+//		}
+		System.out.println(pi.getQuantity());
 	}
 
 	private String pi_pdf_path;
@@ -135,5 +136,48 @@ public class ProformaInvoice {
 		return list;
 	}
 	
+	public double getTotalExclTaxAmount() {
+		int i = 0;
+		String[] lines = this.readLines();
+		while (i < lines.length) {
+			if (lines[i].toUpperCase().contains(Constants.TOTAL)) {
+				
+				if (lines[i].toUpperCase().contains(Constants.TOTAL_EXCL_TAX)) {
+					
+					String[] arr = lines[i].split(" ");
+					String amountStr = arr[arr.length-1];
+					if (amountStr != null && !amountStr.isEmpty())
+						return Util.extractNumberFromAmount(amountStr);
+            		
+//            		cell.setCellType(CellType.NUMERIC);
+//            		CellStyle cs = wb.createCellStyle();
+//            		cs.setDataFormat((short)7);
+//            		cell.setCellStyle(cs);
+				} 
+			}
+			i++;
+		}
+		
+		return -1;
+	}
+	
+	public int getQuantity() {
+		int i = 0;
+		String[] lines = this.readLines();
+		while (i < lines.length) {
+			if (lines[i].toUpperCase().contains(Constants.TOTAL)) {
+				if (lines[i].toUpperCase().contains(Constants.SUB_TOTAL) ||
+						lines[i].toUpperCase().contains(Constants.TOTAL_EXCL_TAX)) {
+					i++;
+					continue;
+				}
+				String[] arr = lines[i].split(" ");
+				if (arr != null && arr.length >= 3)
+					return Integer.parseInt(arr[arr.length-1]);
+			}
+			i++;
+		}
+		return -1;
+	}
 	
 }

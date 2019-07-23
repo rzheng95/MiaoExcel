@@ -34,10 +34,14 @@ public final class Constants
 	// PI
 	public static final String CONTRACT = "Contract";
 	public static final String INVOICE = "Invoice";
+	public static final String PACKING_LIST = "Packing list";
+	public static final String BAO_GUAN_DAN = "报关单";
 	public static final String TOTAL = "TOTAL";
 	public static final String SUB_TOTAL = "SUB TOTAL";
 	public static final String TOTAL_EXCL_TAX = "TOTAL EXCL. TAX";
 	public static final String PI_PO = "P.O.NO.";
+	
+	public static final String SAUDI_ARABIA = "SAUDI ARABIA";
 	
 	// PI stats
 	public static final int TOTAL_QUANTITY_INDEX = 0;

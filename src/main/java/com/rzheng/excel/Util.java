@@ -68,6 +68,12 @@ public final class Util {
 		return xls_filename;
 	}
 	
+	public static double extractNumberFromAmount(String amount) {
+		amount = amount.replaceAll("\\$", "").trim();
+		amount = amount.replaceAll(",", "").trim();
+		return Double.parseDouble(amount);
+	}
+	
 	public static String read(String pdf_path) {
 		String text = null;
         try {

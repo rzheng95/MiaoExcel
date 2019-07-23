@@ -11,8 +11,8 @@ import org.apache.pdfbox.text.PDFTextStripperByArea;
 public class ShipmentInformation {
 
 	public static void main(String[] args) {
-		ShipmentInformation si = new ShipmentInformation("052059 SI.pdf");
-		System.out.println(si.getCpoNumber());
+		ShipmentInformation si = new ShipmentInformation("051336 SI.pdf");
+		System.out.println(si.getBillOfLadingRequirement());
 	}
 
 	private String si_pdf_path;
@@ -262,7 +262,59 @@ public class ShipmentInformation {
 
 		return null;
 	}
+	
+	public String getBillOfLadingRequirement() {
+		int i = 0;
+		String[] lines = this.readLines();
 
+		while (i < lines.length) {
+			if (lines[i].toUpperCase().contains(Constants.ISSUE) && lines[i].toUpperCase().contains(Constants.INVOICE.toUpperCase())
+					&& lines[i].toUpperCase().contains(",")) {
+				String[] arr = lines[i].split(",")[0].split(" ");
+				if(arr.length >= 2)
+					return arr[arr.length-2] + " " + arr[arr.length-1];
+			}
+			i++;
+		}
+
+		return null;
+	}
+
+	public String getDestinationCity() {
+		String destination = this.getDestination();
+		if(destination != null) {
+			String[] arr = null;
+			if (destination.contains(",")) {
+				arr = destination.split(",");	
+			} else if  (destination.contains("-")) {
+				arr = destination.split("-");	
+			} else if  (destination.contains("–")) {
+				arr = destination.split("–");	
+			}
+   		 	if (arr != null && arr.length >= 1) {
+   		 		return arr[0].trim();
+   		 	}	
+		} 
+		return destination;
+	}
+	
+	public String getDestinationCountry() {
+		String destination = this.getDestination();
+		if(destination != null) {
+			String[] arr = null;
+			if (destination.contains(",")) {
+				arr = destination.split(",");	
+			} else if  (destination.contains("-")) {
+				arr = destination.split("-");	
+			} else if  (destination.contains("–")) {
+				arr = destination.split("–");	
+			}
+   		 	if (arr != null && arr.length >= 2) {
+   		 		return arr[1].trim();
+   		 	}	
+		} 
+		return destination;
+	}
 }
 
 
