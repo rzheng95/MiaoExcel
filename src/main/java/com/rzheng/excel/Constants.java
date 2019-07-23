@@ -28,7 +28,8 @@ public final class Constants
 	public static final String BL = "B/L";
 	
 	public static final String ISSUE = "ISSUE";
-	public static final String SEA_AIR = "SEA";
+	public static final String SEA = "SEA";
+	public static final String AIR = "AIR";
 	
 	// PI
 	public static final String CONTRACT = "Contract";

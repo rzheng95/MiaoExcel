@@ -115,61 +115,66 @@ public final class Util {
 			0.00 		0.00 		0.00 
 	48.00 	2293.20 	2544.00 	71.32 
 
+	48	CARTONS	2544	KGS	71.32 CBM
+
 	 */
 	
 	public static double[] fetchStats(String modelNumber, String type, int quantity) throws IOException {
-		
+//		System.out.println(modelNumber);
 //		System.out.println(type);
 //		System.out.println(quantity);
 		// for any Excel version both .xls and .xlsx
 		Workbook wb = WorkbookFactory.create(new File("净毛体统计2016.09.07.xls"));
 		
 		boolean found = false;
+
 		for (Sheet sheet : wb) {
-		
+
 			for (Row row : sheet) {
 				
-				for (Cell cell : row) {
-					if (cell.getCellType() == CellType.STRING) {
-						if (cell.getRichStringCellValue().getString().trim().equals(modelNumber)) {
-							found = true;
-							break;
+				if (!found) {
+					for (Cell cell : row) {
+
+						if (cell.getCellType() == CellType.STRING) {
+							if (cell.getRichStringCellValue().getString().trim().equals(modelNumber)) {
+								found = true;
+								break;
+							}
 						}
+
 					}
 				}
-				
-				if(found) {
+				// found
+				else {
 
-					if (row.getCell(0).getRichStringCellValue().getString().trim().equals(type)) {
-						int netWeightCol = 1;
-						int grossWeightCol = 2;
-						int lengthCol = 3;
-						int widthCol = 4;
-						int heightCol = 5;
-						
-						// round to 2 decimal points
-						double netWeight =  Math.round((row.getCell(netWeightCol).getNumericCellValue() * quantity) * 100.0) / 100.0;
-						
-						double grossWeight =  Math.round((row.getCell(grossWeightCol).getNumericCellValue() * quantity) * 100.0) / 100.0;
-						
-						double volume =  Math.round(
-								(row.getCell(lengthCol).getNumericCellValue() *
-									row.getCell(widthCol).getNumericCellValue() *
-									row.getCell(heightCol).getNumericCellValue() /
-									1000000 *
-									quantity) 
-								* 100.0) / 100.0;
-						
-						
-						
-						wb.close();
-						return new double[] {netWeight, grossWeight, volume};
+					int quantityCol = 7;
+					int netWeightCol = 8;
+					int grossWeightCol = 9;
+					int volumeCol = 10;
+					// NEED TO CHECK WHEN TO STOP
+					// NEED TO CHECK WHEN TO STOP
+					// NEED TO CHECK WHEN TO STOP
+					if (row.getCell(0) != null && row.getCell(0).getCellType() == CellType.STRING) {
+						if (row.getCell(0).getRichStringCellValue().getString().trim().equals(type)) {
+							
+							row.getCell(quantityCol).setCellValue(quantity);
+							
+							HSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
+							XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
+							
+							double netWeight =  Math.round(row.getCell(netWeightCol).getNumericCellValue() * 100.0) / 100.0;
+							double grossWeight =  Math.round(row.getCell(grossWeightCol).getNumericCellValue() * 100.0) / 100.0;
+							double volume =  Math.round(row.getCell(volumeCol).getNumericCellValue() * 100.0) / 100.0;
+							return new double[] {netWeight, grossWeight, volume};
+						}
 					}
 
 				}
 			}
+
 		}
-		
+
+		wb.close();
 		return null;
 	}
 	

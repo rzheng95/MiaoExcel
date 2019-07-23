@@ -12,13 +12,13 @@ public class Main
 {
 	public static void main(String[] args) throws InvalidFormatException, IOException 
 	{	
-		// 051490
+		// 051490 X
 		// 052059
-		// 051488
-		// 051487
-		// 051338
+		// 051488 X
+		// 051487 X
+		// 051338 
 		// 051336
-		String so_error = new ShippingOrder().run("052059 SI.pdf", "052059 PI.pdf", "");
+		String so_error = new ShippingOrder().run("052059 SI.pdf", "052059 PI.pdf", "so.xls");
 		System.out.println(so_error);
 
 //		CustomsDeclaration cd = new CustomsDeclaration("052059 SI.pdf", "052059 PI.pdf", "", "INYB2019US0449");
