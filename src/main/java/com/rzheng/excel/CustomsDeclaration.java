@@ -18,6 +18,9 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 
+import com.rzheng.excel.util.Constants;
+import com.rzheng.excel.util.Util;
+
 public class CustomsDeclaration 
 {
 	// Contract
@@ -62,7 +65,6 @@ public class CustomsDeclaration
 	private String si_pdf_path;
 	private String pi_pdf_path;
 	private String cd_xls_path;
-	private String cd_template;
 	private String invoiceNumber;
 
 	public CustomsDeclaration(String si_pdf_path, String pi_pdf_path, String cd_xls_path, String cd_template, String invoiceNumber) throws IOException
@@ -71,7 +73,6 @@ public class CustomsDeclaration
 		this.si_pdf_path = si_pdf_path;
 		this.pi_pdf_path = pi_pdf_path;
 		this.cd_xls_path = cd_xls_path;
-		this.cd_template = cd_template;
 		this.invoiceNumber = invoiceNumber;
 		
 		this.fileInput = new FileInputStream(new File(cd_template));
@@ -134,7 +135,7 @@ public class CustomsDeclaration
 		
 		
 		
-        ShipmentInformation si = new ShipmentInformation(si_pdf_path);
+        ShipmentInstructions si = new ShipmentInstructions(si_pdf_path);
         
         
 //----- Invoice page------------------------------------------------------------------
@@ -216,137 +217,6 @@ public class CustomsDeclaration
 					"错误： 找不到Destination Country.\n";
 		}
         
-        /*
-		try (PDDocument pi = PDDocument.load(new File(pi_pdf_path));
-				PDDocument si = PDDocument.load(new File(si_pdf_path))) {
-			pi.getClass();
-			si.getClass();
-			
-			if (!pi.isEncrypted() && !si.isEncrypted()) {
-
-				PDFTextStripperByArea stripper = new PDFTextStripperByArea();
-				stripper.setSortByPosition(true);
-
-				PDFTextStripper tStripper = new PDFTextStripper();
-
-				String piText = tStripper.getText(pi);
-				String siText = tStripper.getText(si);
-//				System.out.println(siText);
-				// SI
-				String[] lines = siText.split("\\r?\\n");
-				int i = 0;
-				
-				while ( i < lines.length ) {
-
-					worksheet = workbook.getSheetAt(0);
-					
-					if(lines[i].toUpperCase().contains(Constants.CONSIGNEE)) {
-						
-						String str = lines[i].substring(Constants.CONSIGNEE.length()).trim();
-						
-						worksheet = workbook.getSheetAt(RECIPIENT_SHEET);
-                		cell = worksheet.getRow(RECIPIENT_ROW).getCell(RECIPIENT_COL);
-                		cell.setCellValue(str);
-						
-	            		
-                		worksheet = workbook.getSheet(Constants.INVOICE);
-	            		cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
-
-	           		 	
-	           		 	i++;
-                		while (!Util.checkEndLine(lines[i].toUpperCase()))
-                		{
-                			if (lines[i].trim().isEmpty())
-                			{
-                				i++;
-                				continue;
-                			}
-                			str += "\n" + lines[i].trim();
-		           		 	i++;
-                		}
-                		i--;
-                		cell.setCellValue(str);
-                		
-                		
-                		
-					}
-					else if (lines[i].toUpperCase().contains(Constants.DESTINATION)) {
-
-						worksheet = workbook.getSheet(Constants.INVOICE);
-						String city = lines[i].substring(Constants.DESTINATION.length()).trim();
-
-						if (city.contains(",")) {
-							String[] arr = city.split(",");
-							city = arr[0].trim();	
-						} else if  (city.contains("-")) {
-							String[] arr = city.split("-");
-							city = arr[0].trim();	
-						} else if  (city.contains("–")) {
-							String[] arr = city.split("–");
-							city = arr[0].trim();	
-						}
-
-						cell = worksheet.getRow(DESTINATION_ROW).getCell(DESTINATION_COL);
-	           		 	cell.setCellValue(city);
-					}
-					
-					
-					
-					i++;
-				}
-				
-				
-				
-				// PI
-				lines = piText.split("\\r?\\n");
-				
-				i = 0;
-
-				while (i < lines.length) {
-					
-					worksheet = workbook.getSheetAt(0);
-					
-					if (lines[i].contains(Constants.TOTAL)) {
-						if (lines[i].contains(Constants.TOTAL_EXCL_TAX)) {
-		            		cell = worksheet.getRow(TOTAL_EXCL_TAX_ROW).getCell(TOTAL_EXCL_TAX_COL);
-		            		double amount = extractNumberFromString(lines[i].substring(Constants.TOTAL_EXCL_TAX.length()));
-		           		 	cell.setCellValue(amount);
-//		            		cell.setCellType(CellType.NUMERIC);
-//		            		CellStyle cs = wb.createCellStyle();
-//		            		cs.setDataFormat((short)7);
-//		            		cell.setCellStyle(cs);
-							
-		           		 	// set total amount
-		           		 	cell = worksheet.getRow(TOTAL_EXCL_TAX_ROW).getCell(TOTAL_EXCL_TAX_COL);
-		           		 	cell.setCellValue(amount);
-		           		 	i++;
-		           		 	continue;
-		           		 	
-						} else if (lines[i].contains(Constants.SUB_TOTAL)) {
-							i++;
-							continue;
-						}
-						String[] arr = lines[i].split(" ");
-						cell = worksheet.getRow(QUANTITY_ROW).getCell(QUANTITY_COL);
-						cell.setCellValue(Integer.parseInt(arr[arr.length-1].trim()));
-
-					}
-					else if (lines[i].contains(Constants.PI_PO))
-					{
-						String po_num = lines[i].substring(lines[i].indexOf(Constants.PI_PO) + Constants.PI_PO.length()).trim();
-						worksheet = workbook.getSheet(Constants.INVOICE);
-						cell = worksheet.getRow(PO_ROW).getCell(PO_COL);
-						cell.setCellValue(po_num);
-					}
-
-					i++;
-				}
-
-			}
-			si.close();
-			pi.close();
-		}
-		*/
         
 		if (cd_xls_path.trim().isEmpty()) {
 			String[] poNum = si.getPoNumber().split(" ");

@@ -1,4 +1,4 @@
-package com.rzheng.excel;
+package com.rzheng.excel.util;
 
 public final class Constants 
 {

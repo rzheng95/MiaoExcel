@@ -3,15 +3,13 @@ package com.rzheng.main;
 
 import java.io.IOException;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import com.rzheng.excel.CustomsDeclaration;
-import com.rzheng.excel.ShippingOrder;
+import com.rzheng.gui.ShippingOrderGUI;
 
-public class Main 
+public class Main
 {
 	public static void main(String[] args) throws InvalidFormatException, IOException 
 	{	
@@ -28,11 +26,37 @@ public class Main
 //		String cd_error = cd.run();
 //		System.out.println(cd_error);
 		
-		JFrame frame = new JFrame("My First GUI");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(300,300);
-		JButton button = new JButton("Press");
-		frame.getContentPane().add(button); // Adds Button to content pane of frame
-		frame.setVisible(true);
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+//				new Login();
+//				new MainMenu();
+				new ShippingOrderGUI();
+			}
+			
+		});
+
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -8,16 +8,19 @@ import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 
-public class ShipmentInformation {
+import com.rzheng.excel.util.Constants;
+import com.rzheng.excel.util.Util;
+
+public class ShipmentInstructions {
 
 	public static void main(String[] args) {
-		ShipmentInformation si = new ShipmentInformation("051336 SI.pdf");
+		ShipmentInstructions si = new ShipmentInstructions("051336 SI.pdf");
 		System.out.println(si.getBillOfLadingRequirement());
 	}
 
 	private String si_pdf_path;
 
-	public ShipmentInformation(String si_pdf_path) {
+	public ShipmentInstructions(String si_pdf_path) {
 		this.si_pdf_path = si_pdf_path;
 
 	}

@@ -2,14 +2,13 @@ package com.rzheng.excel;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
-import org.apache.pdfbox.text.PDFTextStripperByArea;
+import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -17,6 +16,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
+
+import com.rzheng.excel.util.Constants;
+import com.rzheng.excel.util.Util;
 
 public class ShippingOrder {
 	private final int CONSIGNEE_ROW = 8, CONSIGNEE_COL = 0;
@@ -66,14 +68,12 @@ public class ShippingOrder {
 	private String si_pdf_path;
 	private String pi_pdf_path;
 	private String so_xls_path;
-	private String si_template;
 
 	public ShippingOrder(String si_pdf_path, String pi_pdf_path, String so_xls_path, String si_template) throws IOException, InvalidFormatException {
 		this.error = "";
 		this.si_pdf_path = si_pdf_path;
 		this.pi_pdf_path = pi_pdf_path;
 		this.so_xls_path = so_xls_path;
-		this.si_template = si_template;
 		
 		this.cell = null;
 		this.fsIP = new FileInputStream(new File(si_template));
@@ -83,7 +83,7 @@ public class ShippingOrder {
 
 	public String run() throws IOException {
 		
-		ShipmentInformation si = new ShipmentInformation(si_pdf_path);
+		ShipmentInstructions si = new ShipmentInstructions(si_pdf_path);
 		
 		// Consignee
 		cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
@@ -166,10 +166,19 @@ public class ShippingOrder {
 		String poNumber = si.getPoNumber();
 		if(poNumber != null) {
 			cell.setCellValue(poNumber);
+			String[] arr = poNumber.split(" ");
 			if (so_xls_path.trim().isEmpty()) {
-				String[] arr = poNumber.split(" ");
-				if(arr != null && arr.length == 3)
+				
+				if (arr != null && arr.length == 3)
 					so_xls_path = "Shipping Order " + arr[2]; // + PO
+				else {
+					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+				    Date date = new Date();  
+					so_xls_path = "Shipping Order " + formatter.format(date);
+				}
+	        } else {
+	        	if (arr != null && arr.length == 3)
+	        	so_xls_path += "/Shipping Order " + arr[2];
 	        }
 		} else {
 			error = "ERROR: PO # not found.\n" +
@@ -252,7 +261,8 @@ public class ShippingOrder {
 			}
 		}
 		
-	
+		// refreshes all formulas existed in the spreadsheet
+		HSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
 		// Close the InputStream
 		fsIP.close();
 		
@@ -264,6 +274,10 @@ public class ShippingOrder {
 		wb.write(output_file);
 		// close the stream
 		output_file.close();
+		
+		if (error.isEmpty()) {
+			error = "Success!";
+		}
 
 		return error;
 	}
