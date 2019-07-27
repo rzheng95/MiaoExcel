@@ -1,7 +1,6 @@
 package com.rzheng.excel.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -9,12 +8,8 @@ import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -22,9 +17,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import io.github.jonathanlink.PDFLayoutTextStripper;
 
 public final class Util {
@@ -84,21 +76,19 @@ public final class Util {
             PDFTextStripper pdfTextStripper = new PDFLayoutTextStripper();
             text = pdfTextStripper.getText(pdDocument);
             
-            
             pdDocument.close();
-			
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        };
+        }
 		return text; 
 	}
 	
-	public static String[] fetchModel(String itemNumber) throws IOException, InvalidFormatException {
+	public static String[] fetchModel(String product_file_path, String itemNumber) throws IOException, InvalidFormatException {
 
 		// for any Excel version both .xls and .xlsx
-		Workbook wb = WorkbookFactory.create(new File("magnussen 产品对照表 201905025.xlsx"));
+		Workbook wb = WorkbookFactory.create(new File(product_file_path));
 		Sheet worksheet = wb.getSheetAt(0);
 
 		for (Row row : worksheet) {
@@ -133,12 +123,14 @@ public final class Util {
 
 	 */
 	
-	public static double[] fetchStats(String modelNumber, String type, int quantity) throws IOException {
+	public static double[] fetchStats(String dimension_file_path, String modelNumber, String type, int quantity) throws IOException {
 //		System.out.println(modelNumber);
 //		System.out.println(type);
 //		System.out.println(quantity);
 		// for any Excel version both .xls and .xlsx
-		Workbook wb = WorkbookFactory.create(new File("净毛体统计2016.09.07.xls"));
+		Workbook wb = WorkbookFactory.create(new File(dimension_file_path));
+		if (wb == null)
+			return null;
 		
 		boolean found = false;
 

@@ -13,24 +13,25 @@ import com.rzheng.excel.util.Util;
 
 public class ProformaInvoice {
 	public static void main(String[] args) {
-		ProformaInvoice pi = new ProformaInvoice("052059 PI.pdf");
-//		List<Item> items = pi.getItems();
-//		List<Object> stats = pi.getStats(items);
-//		for (Object s : stats)
-//		{
-//			System.out.println(s);
-//		}
-		System.out.println(pi.getQuantity());
+//		ProformaInvoice pi = new ProformaInvoice("052059 PI.pdf");
 	}
 
 	private String pi_pdf_path;
+	private String product_file_path;
+	private String dimension_file_path;
 
-	public ProformaInvoice(String pi_pdf_path) {
+	public ProformaInvoice(String product_file_path, String dimension_file_path, String pi_pdf_path) {
 		this.pi_pdf_path = pi_pdf_path;
+		this.product_file_path = product_file_path;
+		this.dimension_file_path = dimension_file_path;
 	}
 	
 	public String[] readLines() {
-		String[] lines = Util.read(this.pi_pdf_path).split("\\r?\\n");
+		String text = Util.read(this.pi_pdf_path);
+		if (text == null)
+			return null;
+		
+		String[] lines = text.split("\\r?\\n");
 		
 		// remove extra spaces
 		for (int i = 0; i < lines.length; i++) {
@@ -43,6 +44,9 @@ public class ProformaInvoice {
 	public List<Item> getItems() {
 		
 		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
 		List<Item> items = new ArrayList<>();
 		int i = 0;
 		while (i < lines.length) {
@@ -92,6 +96,10 @@ public class ProformaInvoice {
 	
 	public List<Object> getStats(List<Item> items) {
 		
+		if (items == null || items.isEmpty()) {
+			return null;
+		}
+		
 		List<Object> list = new ArrayList<>();
 		int totalQuantity = 0;
 		double totalNetWeight = 0;
@@ -102,7 +110,7 @@ public class ProformaInvoice {
 		for (Item item : items) {
 			String[] models = null;
 			try {
-				models = Util.fetchModel(item.getItemNumber());
+				models = Util.fetchModel(this.product_file_path, item.getItemNumber());
 			} catch (InvalidFormatException | IOException e) {
 				e.printStackTrace();
 			}
@@ -111,7 +119,7 @@ public class ProformaInvoice {
 	
 				double[] stats = null;
 				try {
-					stats = Util.fetchStats(models[0].substring(0, 6), models[1], Integer.parseInt(item.getQuantity()));
+					stats = Util.fetchStats(this.dimension_file_path, models[0].substring(0, 6), models[1], Integer.parseInt(item.getQuantity()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -124,14 +132,19 @@ public class ProformaInvoice {
 				} else {
 					// stats is null = model number not found
 					errorCode = "ERROR: Cannot find model number " + models[0].substring(0, 6) +
-							"\n错误： 找不到艺贝型号" + models[0].substring(0, 6) + "\n";
+							"\n错误： 找不到艺贝型号" + models[0].substring(0, 6) + "\n"
+									+ "Please check your Dimemsion Chart File.\n"
+									+ "请检查净毛体统计表.\n";
 				}
 			} else {
 				// models is null = itemNum not found
 				errorCode = "ERROR: Cannot find item number " + item.getItemNumber() +
-						"\n错误： 找不到客户型号" + item.getItemNumber() + "\n";
+						"\n错误： 找不到客户型号" + item.getItemNumber() + "\n"
+								+ "Please check your Product Chart File.\n"
+								+ "请检查产品对照表.\n";
 			}
 		}
+
 		list.add(totalQuantity);
 		list.add(totalNetWeight);
 		list.add(totalGrossWeight);
@@ -141,8 +154,11 @@ public class ProformaInvoice {
 	}
 	
 	public double getTotalExclTaxAmount() {
-		int i = 0;
 		String[] lines = this.readLines();
+		if (lines == null)
+			return -1;
+		
+		int i = 0;
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.TOTAL)) {
 				
@@ -166,8 +182,11 @@ public class ProformaInvoice {
 	}
 	
 	public int getQuantity() {
-		int i = 0;
 		String[] lines = this.readLines();
+		if (lines == null)
+			return -1;
+		
+		int i = 0;
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.TOTAL)) {
 				if (lines[i].toUpperCase().contains(Constants.SUB_TOTAL) ||

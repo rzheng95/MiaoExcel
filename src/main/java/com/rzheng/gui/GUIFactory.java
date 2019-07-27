@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -57,6 +58,14 @@ public final class GUIFactory {
 				new ShippingOrderGUI().setVisible(true);
 			}
 		});
+		
+		JMenuItem menuItem_customsDeclaration = new JMenuItem("Customs Declaration");
+		menuItem_customsDeclaration.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				new CustomsDeclarationGUI().setVisible(true);
+			}
+		});
 
 		JMenuItem menuItem_exit = new JMenuItem("Exit");
 		menuItem_exit.addActionListener(new ActionListener() {
@@ -67,6 +76,7 @@ public final class GUIFactory {
 
 		mnSelect.add(menuItem_exit);
 		mnSelect.add(menuItem_shippingOrder);
+		mnSelect.add(menuItem_customsDeclaration);
 
 		JMenu mnAbout = new JMenu("About");
 		JMenuItem menuItem_readMe = new JMenuItem("README");
@@ -89,6 +99,15 @@ public final class GUIFactory {
 		menuBar.add(mnAbout);
 
 		return menu;
+	}
+	
+	public static boolean isTextFieldEmpty(List<JTextField> textfields) {
+		
+		for (JTextField tf : textfields) {
+			if (tf.getText().isEmpty())
+				return false;
+		}
+		return true;
 	}
 
 	public static class OpenFileActionListener implements ActionListener {

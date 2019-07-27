@@ -10,9 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
-import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -62,14 +59,18 @@ public class CustomsDeclaration
 	private Cell cell;
 	
 	private String error;
+	private String product_file_path;
+	private String dimension_file_path;
 	private String si_pdf_path;
 	private String pi_pdf_path;
 	private String cd_xls_path;
 	private String invoiceNumber;
 
-	public CustomsDeclaration(String si_pdf_path, String pi_pdf_path, String cd_xls_path, String cd_template, String invoiceNumber) throws IOException
+	public CustomsDeclaration(String product_file_path, String dimension_file_path, String si_pdf_path, String pi_pdf_path, String cd_xls_path, String cd_template, String invoiceNumber) throws IOException
 	{
 		this.error = "";
+		this.product_file_path = product_file_path;
+		this.dimension_file_path = dimension_file_path;
 		this.si_pdf_path = si_pdf_path;
 		this.pi_pdf_path = pi_pdf_path;
 		this.cd_xls_path = cd_xls_path;
@@ -95,7 +96,7 @@ public class CustomsDeclaration
         
 
         if (invoiceNumber.trim().isEmpty()) {
-        	invoiceNumber = "INYB" + invoice_date;
+        	invoiceNumber = "INYB" + calendar.get(Calendar.YEAR) + "US" + calendar.get(Calendar.MONTH) + calendar.get(Calendar.DAY_OF_MONTH);
         }
         
 //----- Contract page------------------------------------------------------------------
@@ -110,7 +111,7 @@ public class CustomsDeclaration
 		cell.setCellValue(contract_date);
 		
 		
-		ProformaInvoice pi = new ProformaInvoice(pi_pdf_path);
+		ProformaInvoice pi = new ProformaInvoice(product_file_path, dimension_file_path, pi_pdf_path);
 		
 
 		// Quantity
@@ -224,19 +225,30 @@ public class CustomsDeclaration
 				cd_xls_path = invoiceNumber + " SOFA " + poNum[2] ; // + PO
         }
 		
-		// refreshes all formulas existed in the spreadsheet
-		HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
+		
 		// Close the InputStream
-		fileInput.close();
+		if(fileInput != null)
+			fileInput.close();
 
-		cd_xls_path = Util.correctXlsFilename(cd_xls_path);
+		if (error.isEmpty()) {
+			error = "Success!";
 
-		// Open FileOutputStream to write updates
-		FileOutputStream output_file = new FileOutputStream(new File(cd_xls_path));
-		// write changes
-		workbook.write(output_file);
-		// close the stream
-		output_file.close();
+			// refreshes all formulas existed in the spreadsheet
+			HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
+
+			cd_xls_path = Util.correctXlsFilename(cd_xls_path);
+
+			// Open FileOutputStream to write updates
+			FileOutputStream output_file = new FileOutputStream(new File(cd_xls_path));
+			// write changes
+			workbook.write(output_file);
+			// close the stream
+			output_file.close();
+		}
+
+		
+		
+		
 		return this.error;
 	}
 	

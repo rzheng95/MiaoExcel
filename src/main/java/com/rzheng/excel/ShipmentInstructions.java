@@ -45,7 +45,6 @@ public class ShipmentInstructions {
 				return pdfFileInText.split("\\r?\\n");
 			}
 		} catch (InvalidPasswordException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -56,9 +55,14 @@ public class ShipmentInstructions {
 	}
 
 	public String getConsignee() {
+		
+		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
 		int i = 0;
 		String consignee = null;
-		String[] lines = this.readLines();
+		
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.CONSIGNEE)) {
@@ -86,9 +90,14 @@ public class ShipmentInstructions {
 	}
 
 	public String getNotifyParty() {
+		
+		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
 		int i = 0;
 		String notifyParty = null;
-		String[] lines = this.readLines();
+
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.NOTIFY)) {
@@ -122,9 +131,12 @@ public class ShipmentInstructions {
 	}
 
 	public String getShipToAddress() {
+		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
 		int i = 0;
 		String shipToAddress = null;
-		String[] lines = this.readLines();
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.SHIP_TO_ADDRESS)) {
@@ -149,9 +161,12 @@ public class ShipmentInstructions {
 	}
 
 	public String getForwarder() {
+		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
 		int i = 0;
 		String forwarder = null;
-		String[] lines = this.readLines();
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.FORWARDER)) {
@@ -175,8 +190,11 @@ public class ShipmentInstructions {
 	}
 
 	public String getPortOfLoading() {
-		int i = 0;
 		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
+		int i = 0;
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.PORT_OF_LOADING)) {
@@ -188,8 +206,11 @@ public class ShipmentInstructions {
 	}
 
 	public String getPortOfDischarge() {
-		int i = 0;
 		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
+		int i = 0;
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.PORT_OF_DISCHARGE)) {
@@ -201,8 +222,11 @@ public class ShipmentInstructions {
 	}
 
 	public String getDestination() {
-		int i = 0;
 		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
+		int i = 0;
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.DESTINATION)) {
@@ -215,8 +239,11 @@ public class ShipmentInstructions {
 	}
 	
 	public String getPoNumber() {
-		int i = 0;
 		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
+		int i = 0;
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.PO) && lines[i].toUpperCase().contains(Constants.CO)
@@ -232,8 +259,11 @@ public class ShipmentInstructions {
 	}
 	
 	public String getCpoNumber() {
-		int i = 0;
 		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
+		int i = 0;
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.PO) && lines[i].toUpperCase().contains(Constants.CO)
@@ -250,8 +280,11 @@ public class ShipmentInstructions {
 	}
 	
 	public String getContainerSize() {
-		int i = 0;
 		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
+		int i = 0;
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.CONTAINER_SIZE)) {
@@ -267,8 +300,11 @@ public class ShipmentInstructions {
 	}
 	
 	public String getBillOfLadingRequirement() {
-		int i = 0;
 		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
+		int i = 0;
 
 		while (i < lines.length) {
 			if (lines[i].toUpperCase().contains(Constants.ISSUE) && lines[i].toUpperCase().contains(Constants.INVOICE.toUpperCase())

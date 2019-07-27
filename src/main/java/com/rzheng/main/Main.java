@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import com.rzheng.gui.ShippingOrderGUI;
+import com.rzheng.gui.CustomsDeclarationGUI;
 
 public class Main
 {
@@ -31,8 +31,8 @@ public class Main
 			@Override
 			public void run() {
 //				new Login();
-//				new MainMenu();
-				new ShippingOrderGUI();
+//				new ShippingOrderGUI();
+				new CustomsDeclarationGUI();
 			}
 			
 		});

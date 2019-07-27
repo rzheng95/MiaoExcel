@@ -2,6 +2,7 @@ package com.rzheng.excel;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -11,7 +12,6 @@ import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -65,23 +65,48 @@ public class ShippingOrder {
 	private Cell cell;
 	
 	private String error;
+	private String product_file_path;
+	private String dimension_file_path;
 	private String si_pdf_path;
 	private String pi_pdf_path;
 	private String so_xls_path;
+	private String si_template;
 
-	public ShippingOrder(String si_pdf_path, String pi_pdf_path, String so_xls_path, String si_template) throws IOException, InvalidFormatException {
+	public ShippingOrder(String product_file_path, String dimension_file_path, String si_pdf_path, String pi_pdf_path, String so_xls_path, String si_template) {
 		this.error = "";
+		this.product_file_path = product_file_path;
+		this.dimension_file_path = dimension_file_path;
 		this.si_pdf_path = si_pdf_path;
 		this.pi_pdf_path = pi_pdf_path;
 		this.so_xls_path = so_xls_path;
+		this.si_template = si_template;
 		
 		this.cell = null;
-		this.fsIP = new FileInputStream(new File(si_template));
-		this.wb = new HSSFWorkbook(fsIP);
-		this.worksheet = wb.getSheetAt(0);
+		
 	}
 
-	public String run() throws IOException {
+	public String run() throws IOException  {
+		
+		try {
+			this.fsIP = new FileInputStream(new File(this.si_template));
+		} catch (FileNotFoundException e) {
+			error = "ERROR: Shipping Order Template Not Found!\n" + this.si_template; 
+			e.printStackTrace();
+			return error;
+		}
+		
+		try {
+			this.wb = new HSSFWorkbook(fsIP);
+		} catch (IOException e) {
+			error = "ERROR: FileInputStream Exception";
+			e.printStackTrace();
+			return error;
+		}
+		
+		this.worksheet = wb.getSheetAt(0);
+		if (!error.isEmpty()) {
+			return error;
+		}
 		
 		ShipmentInstructions si = new ShipmentInstructions(si_pdf_path);
 		
@@ -91,7 +116,7 @@ public class ShippingOrder {
 		if(consignee != null) {
 			cell.setCellValue(consignee);
 		} else {
-			error = "ERROR: Consignee not found.\n" +
+			error += "ERROR: Consignee not found.\n" +
 					"错误： 找不到Consignee.\n";
 		}
 		
@@ -101,7 +126,7 @@ public class ShippingOrder {
 		if(notifyParty != null) {
 			cell.setCellValue(notifyParty);
 		} else {
-			error = "ERROR: Notify Party not found.\n" +
+			error += "ERROR: Notify Party not found.\n" +
 					"错误： 找不到Notify Party.\n";
 		}
 		
@@ -111,7 +136,7 @@ public class ShippingOrder {
 		if(shipToAddress != null) {
 			cell.setCellValue(shipToAddress);
 		} else {
-			error = "ERROR: Ship-to Address not found.\n" +
+			error += "ERROR: Ship-to Address not found.\n" +
 					"错误： 找不到Ship-to Address.\n";
 		}
 		
@@ -121,7 +146,7 @@ public class ShippingOrder {
 		if(forwarder != null) {
 			cell.setCellValue(forwarder);
 		} else {
-			error = "ERROR: Forwarder not found.\n" +
+			error += "ERROR: Forwarder not found.\n" +
 					"错误： 找不到Forwarder.\n";
 		}
 		
@@ -137,7 +162,7 @@ public class ShippingOrder {
 			else
 				cell.setCellValue(Constants.AIR);
 		} else {
-			error = "ERROR: Port of Discharge not found.\n" +
+			error += "ERROR: Port of Discharge not found.\n" +
 					"错误： 找不到Port of Discharge.\n";
 		}
 		
@@ -147,7 +172,7 @@ public class ShippingOrder {
 		if(portOfLoading != null) {
 			cell.setCellValue(portOfLoading);
 		} else {
-			error = "ERROR: Port of Loading not found.\n" +
+			error += "ERROR: Port of Loading not found.\n" +
 					"错误： 找不到Port of Loading.\n";
 		}
 		
@@ -157,7 +182,7 @@ public class ShippingOrder {
 		if(destination != null) {
 			cell.setCellValue(destination);
 		} else {
-			error = "ERROR: Destination not found.\n" +
+			error += "ERROR: Destination not found.\n" +
 					"错误： 找不到Destination.\n";
 		}
 		
@@ -178,10 +203,10 @@ public class ShippingOrder {
 				}
 	        } else {
 	        	if (arr != null && arr.length == 3)
-	        	so_xls_path += "/Shipping Order " + arr[2];
+	        		so_xls_path += "/Shipping Order " + arr[2];
 	        }
 		} else {
-			error = "ERROR: PO # not found.\n" +
+			error += "ERROR: PO # not found.\n" +
 					"错误： 找不到PO #.\n";
 		}
 		
@@ -191,7 +216,7 @@ public class ShippingOrder {
 		if(cpoNumber != null) {
 			cell.setCellValue(cpoNumber);
 		} else {
-			error = "ERROR: CPO # not found.\n" +
+			error += "ERROR: CPO # not found.\n" +
 					"错误： 找不到CPO #.\n";
 		}
 		
@@ -209,7 +234,7 @@ public class ShippingOrder {
 				cell.setCellValue(1);
 			}
 		} else {
-			error = "ERROR: Container size not found.\n" +
+			error += "ERROR: Container size not found.\n" +
 					"错误： 找不到Container size.\n";
 		}
 		
@@ -219,7 +244,7 @@ public class ShippingOrder {
 		if(billOfLading != null) {
 			cell.setCellValue(billOfLading);
 		} else {
-			error = "ERROR: Bill of Lading Requirement not found.\n" +
+			error += "ERROR: Bill of Lading Requirement not found.\n" +
 					"错误： 找不到Bill of Lading Requirement.\n";
 		}
 		
@@ -229,7 +254,7 @@ public class ShippingOrder {
 		 * PI
 		 * 
 		*/
-		ProformaInvoice pi = new ProformaInvoice(pi_pdf_path);
+		ProformaInvoice pi = new ProformaInvoice(product_file_path, dimension_file_path, pi_pdf_path);
 		
 		List<Object> stats = pi.getStats(pi.getItems());
 		
@@ -259,27 +284,40 @@ public class ShippingOrder {
 				cell = worksheet.getRow(MEASUREMENT_ROW).getCell(MEASUREMENT_COL);
 				cell.setCellStyle(backgroundStyle);
 			}
+		} else {
+			error += "ERROR: No Item Found in the Provided Pro Forma Invoice File,\n"
+					+ "Or Incorrect Pro Forma Invoice File Path." 
+					+ this.pi_pdf_path + "\n"
+					+ "Perhaps You Entered the Incorrect File Path? Zhuzhu!";
 		}
+		
+	
 		
 		// refreshes all formulas existed in the spreadsheet
 		HSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
 		// Close the InputStream
-		fsIP.close();
-		
-		so_xls_path = Util.correctXlsFilename(so_xls_path);
+		if(fsIP != null)
+			fsIP.close();
 
-		// Open FileOutputStream to write updates
-		FileOutputStream output_file = new FileOutputStream(new File(so_xls_path));
-		// write changes
-		wb.write(output_file);
-		// close the stream
-		output_file.close();
-		
 		if (error.isEmpty()) {
 			error = "Success!";
-		}
-
+			
+			so_xls_path = Util.correctXlsFilename(so_xls_path);
+			// Open FileOutputStream to write updates
+			FileOutputStream output_file = new FileOutputStream(new File(so_xls_path));
+			// write changes
+			wb.write(output_file);
+			// close the stream
+			output_file.close();
+		} 
+		
 		return error;
 	}
 
 }
+
+
+
+
+
+
