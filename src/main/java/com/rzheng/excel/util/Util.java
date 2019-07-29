@@ -1,14 +1,18 @@
 package com.rzheng.excel.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -17,6 +21,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+
 import io.github.jonathanlink.PDFLayoutTextStripper;
 import net.sourceforge.lept4j.util.LoadLibs;
 import net.sourceforge.tess4j.ITesseract;
@@ -89,8 +96,60 @@ public final class Util {
 		return text; 
 	}
 	
-	// 8 reads $
+	public static String readDocument(String path) {
+		if (!path.isEmpty()) {
+			if (path.contains(".doc")) {
+				if (path.contains(".docx")) {
+					return readDocx(path);
+				}
+				return readDoc(path);
+			}
+		}
+		return null;
+	}
 	
+	public static String readDoc(String doc_path) {
+		String text = null;
+		try {
+			File file = new File(doc_path);
+			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+
+			HWPFDocument doc = new HWPFDocument(fis);
+
+			WordExtractor we = new WordExtractor(doc);
+//			String[] paragraphs = we.getParagraphText();
+			
+			text = we.getText();
+			fis.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return text; 
+	}
+	
+	public static String readDocx(String docx_path) {
+		String text = null;
+		try {
+			File file = new File(docx_path);
+			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+
+			XWPFDocument document = new XWPFDocument(fis);
+
+			List<XWPFParagraph> paragraphs = document.getParagraphs();
+			
+			text = "";
+			for (XWPFParagraph para : paragraphs) {
+				text += para.getText() + "\n";
+			}
+			fis.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return text; 
+	}
+	
+	// Inaccurate reading from low resolution images. e.g. 8 reads $
+	// https://github.com/tesseract-ocr/tessdata
 	public static String readImage(String img_path) {
 		String text = null;
 
@@ -146,9 +205,7 @@ public final class Util {
 	 */
 	
 	public static double[] fetchStats(String dimension_file_path, String modelNumber, String type, int quantity) throws IOException {
-//		System.out.println(modelNumber);
-//		System.out.println(type);
-//		System.out.println(quantity);
+
 		// for any Excel version both .xls and .xlsx
 		Workbook wb = WorkbookFactory.create(new File(dimension_file_path));
 		if (wb == null)

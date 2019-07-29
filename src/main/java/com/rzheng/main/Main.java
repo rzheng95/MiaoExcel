@@ -29,7 +29,7 @@ public class Main
 //		String cc_error = cc.run();
 //		System.out.println(cc_error);
 		
-		String text = Util.readImage("指代/Unitex Logistics Ltd 051490.png");
+		String text = Util.readDocument("指代/Unitex Logistics Ltd 051490.docx");
 		System.out.println(text);
 		
 		
