@@ -2,6 +2,7 @@ package com.rzheng.excel;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -64,6 +65,7 @@ public class CustomsDeclaration
 	private String si_pdf_path;
 	private String pi_pdf_path;
 	private String cd_xls_path;
+	private String cd_template;
 	private String invoiceNumber;
 
 	public CustomsDeclaration(String product_file_path, String dimension_file_path, String si_pdf_path, String pi_pdf_path, String cd_xls_path, String cd_template, String invoiceNumber) throws IOException
@@ -75,14 +77,30 @@ public class CustomsDeclaration
 		this.pi_pdf_path = pi_pdf_path;
 		this.cd_xls_path = cd_xls_path;
 		this.invoiceNumber = invoiceNumber;
-		
-		this.fileInput = new FileInputStream(new File(cd_template));
-		this.workbook = new HSSFWorkbook(fileInput);
-
+		this.cd_template = cd_template;
 	}
 	
 	public String run() throws IOException
 	{
+		
+		try {
+			this.fileInput = new FileInputStream(new File(cd_template));
+		} catch (FileNotFoundException e) {
+			error = "ERROR: Customs Declaration Template Not Found!\n" + this.cd_template; 
+			e.printStackTrace();
+			return error;
+		}
+		
+		try {
+			this.workbook = new HSSFWorkbook(fileInput);
+		} catch (IOException e) {
+			error = "ERROR: FileInputStream Exception";
+			e.printStackTrace();
+			return error;
+		}
+		
+		
+		
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Date current_date = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -136,7 +154,7 @@ public class CustomsDeclaration
 		
 		
 		
-        ShipmentInstructions si = new ShipmentInstructions(si_pdf_path);
+        ShippingInstructions si = new ShippingInstructions(si_pdf_path);
         
         
 //----- Invoice page------------------------------------------------------------------

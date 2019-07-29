@@ -20,7 +20,7 @@ public class CustomsDeclarationGUI extends ShippingOrderGUI {
 	
 	public CustomsDeclarationGUI() {
 		super();
-		label_shipping_order_template.setText("*\u6258\u4e66\u6a21\u677f: (Customs Declaration Tempalte)");
+		label_shipping_order_template.setText("*\u6258\u4e66\u6a21\u677f: (Customs Declaration Template)");
 		
 		label_invoice_number = GUIFactory.createLabel("*PI Invoice Number:", 10, 380, 200, 23);
 		add(label_invoice_number);

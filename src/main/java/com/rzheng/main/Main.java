@@ -7,7 +7,9 @@ import javax.swing.SwingUtilities;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
+import com.rzheng.excel.CustomsClearance;
 import com.rzheng.gui.CustomsDeclarationGUI;
+import com.rzheng.gui.ShippingOrderGUI;
 
 public class Main
 {
@@ -22,17 +24,18 @@ public class Main
 //		String so_error = new ShippingOrder().run("052059 SI.pdf", "052059 PI.pdf", "", "Shipping Order Template.xls");
 //		System.out.println(so_error);
 
-//		CustomsDeclaration cd = new CustomsDeclaration("052059 SI.pdf", "052059 PI.pdf", "", "Customs Declaration Template.xls", "INYB2019US0449");
-//		String cd_error = cd.run();
-//		System.out.println(cd_error);
+		CustomsClearance cc = new CustomsClearance("magnussen 产品对照表 201905025.xlsx", "净毛体统计2016.09.07.xls", "052059 SI.pdf", "052059 PI.pdf", "", "Customs Clearance Template.xlsx", "");
+		String cc_error = cc.run();
+		System.out.println(cc_error);
+		
 		
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
 //				new Login();
-//				new ShippingOrderGUI();
-				new CustomsDeclarationGUI();
+				new ShippingOrderGUI();
+//				new CustomsDeclarationGUI();
 			}
 			
 		});

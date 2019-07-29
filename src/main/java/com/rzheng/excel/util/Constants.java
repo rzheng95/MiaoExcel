@@ -14,6 +14,7 @@ public final class Constants
 	public static final String SELECTION_CRITERIA = "SELECTION CRITERIA:";
 	public static final String FORWARDER = "FORWARDER:";
 	public static final String CARRIER = "CARRIER:";
+	public static final String BACKUP_CARRIER = "BACKUP CARRIER:";
 	public static final String CONTAINER_SIZE = "CONTAINER SIZE:";
 	
 	

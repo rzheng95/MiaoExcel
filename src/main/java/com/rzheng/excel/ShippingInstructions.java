@@ -11,16 +11,16 @@ import org.apache.pdfbox.text.PDFTextStripperByArea;
 import com.rzheng.excel.util.Constants;
 import com.rzheng.excel.util.Util;
 
-public class ShipmentInstructions {
+public class ShippingInstructions {
 
 	public static void main(String[] args) {
-		ShipmentInstructions si = new ShipmentInstructions("051336 SI.pdf");
-		System.out.println(si.getBillOfLadingRequirement());
+		ShippingInstructions si = new ShippingInstructions("051336 SI.pdf");
+		System.out.println(si.getCarrier());
 	}
 
 	private String si_pdf_path;
 
-	public ShipmentInstructions(String si_pdf_path) {
+	public ShippingInstructions(String si_pdf_path) {
 		this.si_pdf_path = si_pdf_path;
 
 	}
@@ -318,6 +318,23 @@ public class ShipmentInstructions {
 
 		return null;
 	}
+	
+	public String getCarrier() {
+		String[] lines = this.readLines();
+		if (lines == null)
+			return null;
+		
+		int i = 0;
+		
+		while (i < lines.length) {
+			if (lines[i].toUpperCase().contains(Constants.CARRIER) && !lines[i].toUpperCase().contains(Constants.BACKUP_CARRIER)) {
+				return lines[i].substring(Constants.CARRIER.length()).trim();
+			}
+			
+			i++;
+		}
+		return null;
+	}
 
 	public String getDestinationCity() {
 		String destination = this.getDestination();
@@ -354,6 +371,8 @@ public class ShipmentInstructions {
 		} 
 		return destination;
 	}
+
+	
 }
 
 

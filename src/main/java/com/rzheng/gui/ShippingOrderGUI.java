@@ -123,7 +123,7 @@ public class ShippingOrderGUI extends JFrame {
 				"Select Dimension Chart", "Excel Files", "OPEN", "xls", "xlsx"));
 		
 		// Shipping Order Template
-		label_shipping_order_template = GUIFactory.createLabel("*\u6258\u4e66\u6a21\u677f: (Shipping Order Tempalte)", 10, 180, 250, 20);
+		label_shipping_order_template = GUIFactory.createLabel("*\u6258\u4e66\u6a21\u677f: (Shipping Order Template)", 10, 180, 250, 20);
 		add(label_shipping_order_template);
 
 		textField_shipping_order_template = GUIFactory.createTextField(10, 200, 800, 23);

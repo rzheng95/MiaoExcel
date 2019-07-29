@@ -108,7 +108,7 @@ public class ShippingOrder {
 			return error;
 		}
 		
-		ShipmentInstructions si = new ShipmentInstructions(si_pdf_path);
+		ShippingInstructions si = new ShippingInstructions(si_pdf_path);
 		
 		// Consignee
 		cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
