@@ -18,6 +18,10 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import io.github.jonathanlink.PDFLayoutTextStripper;
+import net.sourceforge.lept4j.util.LoadLibs;
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 
 public final class Util {
 	
@@ -66,7 +70,7 @@ public final class Util {
 		return Double.parseDouble(amount);
 	}
 	
-	public static String read(String pdf_path) {
+	public static String readPDF(String pdf_path) {
 		String text = null;
         try {
             PDFParser pdfParser = new PDFParser(new RandomAccessFile(new File(pdf_path), "r"));
@@ -83,6 +87,24 @@ public final class Util {
             e.printStackTrace();
         }
 		return text; 
+	}
+	
+	// 8 reads $
+	
+	public static String readImage(String img_path) {
+		String text = null;
+
+		ITesseract instance = new Tesseract();
+		instance.setDatapath("Y:\\Users\\Richard\\spring-tool-suite-4-workspace\\MiaoExcel\\tessdata");
+		instance.setLanguage("eng");
+
+		try {
+			text = instance.doOCR(new File(img_path));
+		} catch (TesseractException e) {
+			e.getMessage();
+		}
+
+		return text;
 	}
 	
 	public static String[] fetchModel(String product_file_path, String itemNumber) throws IOException, InvalidFormatException {

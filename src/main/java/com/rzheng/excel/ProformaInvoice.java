@@ -27,7 +27,7 @@ public class ProformaInvoice {
 	}
 	
 	public String[] readLines() {
-		String text = Util.read(this.pi_pdf_path);
+		String text = Util.readPDF(this.pi_pdf_path);
 		if (text == null)
 			return null;
 		

@@ -27,6 +27,10 @@ public class CustomsClearance
 	private final int FORWARDER_NAME_ROW = 21, FORWARDER_NAME_COL = 1;
 	private final int CARRIER_ROW = 22, CARRIER_COL = 1;
 	
+	
+	private final int DATE_ROW = 9, DATE_COL = 7;
+	private final int INVOICE_ROW = 9, INVOICE_COL = 7;
+	
 	// Contract
 	private final int CONTRACT_DATE_ROW = 5, CONTRACT_DATE_COL = 5;
 	
@@ -35,7 +39,7 @@ public class CustomsClearance
 	private final int TOTAL_EXCL_TAX_ROW = 15, TOTAL_EXCL_TAX_COL = 6;
 
 	// Invoice
-	private final int INVOICE_DATE_ROW = 9, INVOICE_DATE_COL = 7;
+	
 
 	private final int INVOICE_NUMBER_ROW = 5, INVOICE_NUMBER_COL = 6;
 	
@@ -188,7 +192,7 @@ public class CustomsClearance
         worksheet = workbook.getSheet(Constants.INVOICE);
         
         // Invoice Date
-        cell = worksheet.getRow(INVOICE_DATE_ROW).getCell(INVOICE_DATE_COL);
+        //cell = worksheet.getRow(INVOICE_DATE_ROW).getCell(INVOICE_DATE_COL);
 		cell.setCellValue(invoice_date);
 		
 		
