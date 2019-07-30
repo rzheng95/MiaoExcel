@@ -1,9 +1,10 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/rzheng/excel/CustomsClearance.java=UTF-8
 encoding//src/main/java/com/rzheng/excel/CustomsDeclaration.java=UTF-8
-encoding//src/main/java/com/rzheng/excel/ProformaInvoice.java=UTF-8
 encoding//src/main/java/com/rzheng/excel/ShippingOrder.java=UTF-8
-encoding//src/main/java/com/rzheng/excel/util/Constants.java=UTF-8
-encoding//src/main/java/com/rzheng/excel/util/Util.java=UTF-8
 encoding//src/main/java/com/rzheng/gui/Login.java=UTF-8
+encoding//src/main/java/com/rzheng/logistics/companies/UnitexLogistics.java=UTF-8
+encoding//src/main/java/com/rzheng/magnussen/ProformaInvoice.java=UTF-8
 encoding//src/main/java/com/rzheng/main/Main.java=UTF-8
+encoding//src/main/java/com/rzheng/util/Constants.java=UTF-8
+encoding//src/main/java/com/rzheng/util/Util.java=UTF-8

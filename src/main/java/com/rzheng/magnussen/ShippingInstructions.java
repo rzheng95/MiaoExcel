@@ -1,4 +1,4 @@
-package com.rzheng.excel;
+package com.rzheng.magnussen;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,14 +8,14 @@ import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 
-import com.rzheng.excel.util.Constants;
-import com.rzheng.excel.util.Util;
+import com.rzheng.util.Constants;
+import com.rzheng.util.Util;
 
 public class ShippingInstructions {
 
 	public static void main(String[] args) {
-		ShippingInstructions si = new ShippingInstructions("051336 SI.pdf");
-		System.out.println(si.getCarrier());
+		ShippingInstructions si = new ShippingInstructions("052059 SI.pdf");
+		System.out.println(si.getCpoNumber());
 	}
 
 	private String si_pdf_path;
@@ -202,6 +202,20 @@ public class ShippingInstructions {
 			}
 			i++;
 		}
+		return null;
+	}
+	
+	public String getPortOfLoadingCountry() {
+		String portOfLoading = getPortOfLoading();
+		if (portOfLoading != null) {
+			if (portOfLoading.contains(",")) {
+				String[] arr = portOfLoading.split(",");
+				if (arr != null && arr.length == 2) {
+					return arr[1].trim();
+				}
+			}
+		}
+		
 		return null;
 	}
 

@@ -16,8 +16,10 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 
-import com.rzheng.excel.util.Constants;
-import com.rzheng.excel.util.Util;
+import com.rzheng.magnussen.ProformaInvoice;
+import com.rzheng.magnussen.ShippingInstructions;
+import com.rzheng.util.Constants;
+import com.rzheng.util.Util;
 
 public class CustomsDeclaration 
 {
@@ -138,7 +140,7 @@ public class CustomsDeclaration
 			cell = worksheet.getRow(QUANTITY_ROW).getCell(QUANTITY_COL);
 			cell.setCellValue(quantity);
 		} else {
-			error = "ERROR: Quantity not found.\n" + 
+			error += "ERROR: Quantity not found.\n" + 
 					"错误： 找不到Quantity.\n";
 		}
 		
@@ -148,7 +150,7 @@ public class CustomsDeclaration
 			cell = worksheet.getRow(TOTAL_EXCL_TAX_ROW).getCell(TOTAL_EXCL_TAX_COL);
 			cell.setCellValue(totalExclTaxAmount);
 		} else {
-			error = "ERROR: Total Excl. Tax not found.\n" +
+			error += "ERROR: Total Excl. Tax not found.\n" +
 					"错误： 找不到Total Excl. Tax.\n";
 		}
 		
@@ -164,75 +166,76 @@ public class CustomsDeclaration
         cell = worksheet.getRow(INVOICE_DATE_ROW).getCell(INVOICE_DATE_COL);
 		cell.setCellValue(invoice_date);
 		
-		// Consignee
-		cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
+		// Consignee	
 		String consignee = si.getConsignee();
 		if(consignee != null) {
+			cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
 			cell.setCellValue(consignee);
 		} else {
-			error = "ERROR: Consignee not found.\n" +
+			error += "ERROR: Consignee not found.\n" +
 					"错误： 找不到Consignee.\n";
 		}
 		
 		// PO #
-		cell = worksheet.getRow(PO_ROW).getCell(PO_COL);
 		String poNumber = si.getPoNumber();
 		if(poNumber != null) {
+			cell = worksheet.getRow(PO_ROW).getCell(PO_COL);
 			cell.setCellValue(poNumber.substring(Constants.PO.length()).trim());
 		} else {
-			error = "ERROR: PO # not found.\n" +
+			error += "ERROR: PO # not found.\n" +
 					"错误： 找不到PO #.\n";
 		}
         
 		// Destination City
-		cell = worksheet.getRow(DESTINATION_CITY_ROW).getCell(DESTINATION_CITY_COL);
 		String city = si.getDestinationCity();
 		if(city != null) {
+			cell = worksheet.getRow(DESTINATION_CITY_ROW).getCell(DESTINATION_CITY_COL);
    		 	cell.setCellValue(city);
 		} else {
-			error = "ERROR: Destination City not found.\n" +
+			error += "ERROR: Destination City not found.\n" +
 					"错误： 找不到Destination City.\n";
 		}
 		
 		
 //----- Packing List------------------------------------------------------------------	
 		worksheet = workbook.getSheet(Constants.PACKING_LIST);
-		List<Object> stats = pi.getStats(pi.getItems());
+		List<Object> stats = pi.getTotalStats(pi.getItems());
 		
 		if (stats != null) {
-		if (stats.get(Constants.ERROR_CODE_INDEX).toString().isEmpty()) {
-			// Net Weight
-			cell = worksheet.getRow(NET_WEIGHT_ROW).getCell(NET_WEIGHT_COL);
-			cell.setCellValue(Double.parseDouble(stats.get(Constants.TOTAL_NET_WEIGHT_INDEX).toString()));
+			if (stats.get(Constants.ERROR_CODE_INDEX).toString().isEmpty()) {
+				// Net Weight
+				cell = worksheet.getRow(NET_WEIGHT_ROW).getCell(NET_WEIGHT_COL);
+				cell.setCellValue(Double.parseDouble(stats.get(Constants.TOTAL_NET_WEIGHT_INDEX).toString()));
 
-			// Gross Weight
-			cell = worksheet.getRow(GROSS_WEIGHT_ROW).getCell(GROSS_WEIGHT_COL);
-			cell.setCellValue(Double.parseDouble(stats.get(Constants.TOTAL_GROSS_WEIGHT_INDEX).toString()));
-			
-			// Measurement
-			cell = worksheet.getRow(MEASUREMENT_ROW).getCell(MEASUREMENT_COL);
-			cell.setCellValue(Double.parseDouble(stats.get(Constants.TOTAL_VOLUME_INDEX).toString()));
-		} else {
-			error = stats.get(Constants.ERROR_CODE_INDEX).toString();
+				// Gross Weight
+				cell = worksheet.getRow(GROSS_WEIGHT_ROW).getCell(GROSS_WEIGHT_COL);
+				cell.setCellValue(Double.parseDouble(stats.get(Constants.TOTAL_GROSS_WEIGHT_INDEX).toString()));
+
+				// Measurement
+				cell = worksheet.getRow(MEASUREMENT_ROW).getCell(MEASUREMENT_COL);
+				cell.setCellValue(Double.parseDouble(stats.get(Constants.TOTAL_VOLUME_INDEX).toString()));
+			} else {
+				error = stats.get(Constants.ERROR_CODE_INDEX).toString();
+			}
 		}
-	}
 
 //----- 报关单------------------------------------------------------------------
 		worksheet = workbook.getSheet(Constants.BAO_GUAN_DAN);
 		// Recipient (First line of Consignee)
-		cell = worksheet.getRow(RECIPIENT_ROW).getCell(RECIPIENT_COL);
-		if (consignee != null)
+		if (consignee != null) {
+			cell = worksheet.getRow(RECIPIENT_ROW).getCell(RECIPIENT_COL);
 			cell.setCellValue(consignee.split("\\r?\\n")[0]);
+		}
 		
 		// Country 贸易国/运抵国
-		cell = worksheet.getRow(DESTINATION_COUNTRY_ROW).getCell(DESTINATION_COUNTRY_COL);
 		String country = si.getDestinationCountry();
 		if (country != null) {
 			if (country.equalsIgnoreCase(Constants.SAUDI_ARABIA))
 				country = "沙特阿拉伯";
+			cell = worksheet.getRow(DESTINATION_COUNTRY_ROW).getCell(DESTINATION_COUNTRY_COL);
 			cell.setCellValue(country);
 		} else {
-			error = "ERROR: Destination Country not found.\n" +
+			error += "ERROR: Destination Country not found.\n" +
 					"错误： 找不到Destination Country.\n";
 		}
         

@@ -37,6 +37,7 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<!-- Reading .xls & .xlsx files -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
@@ -44,6 +45,7 @@
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-scratchpad -->
+		<!-- Reading .doc & .docx files -->
 		<dependency>
 		    <groupId>org.apache.poi</groupId>
 		    <artifactId>poi-scratchpad</artifactId>

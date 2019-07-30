@@ -1,4 +1,4 @@
-package com.rzheng.excel;
+package com.rzheng.magnussen;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,13 +7,16 @@ import java.util.List;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import com.rzheng.excel.util.Constants;
-import com.rzheng.excel.util.Item;
-import com.rzheng.excel.util.Util;
+import com.rzheng.util.Constants;
+import com.rzheng.util.Item;
+import com.rzheng.util.Util;
 
 public class ProformaInvoice {
 	public static void main(String[] args) {
-//		ProformaInvoice pi = new ProformaInvoice("052059 PI.pdf");
+		ProformaInvoice pi = new ProformaInvoice("magnussen 产品对照表 201905025.xlsx", "净毛体统计2016.09.07.xls", "051490 PI.pdf");
+		for (Item i : pi.getItems()) {
+			System.out.println(i);
+		}
 	}
 
 	private String pi_pdf_path;
@@ -94,7 +97,7 @@ public class ProformaInvoice {
 	}
 	
 	
-	public List<Object> getStats(List<Item> items) {
+	public List<Object> getTotalStats(List<Item> items) {
 		
 		if (items == null || items.isEmpty()) {
 			return null;
@@ -119,7 +122,7 @@ public class ProformaInvoice {
 	
 				double[] stats = null;
 				try {
-					stats = Util.fetchStats(this.dimension_file_path, models[0].substring(0, 6), models[1], Integer.parseInt(item.getQuantity()));
+					stats = Util.fetchDimensions(this.dimension_file_path, models[0].substring(0, 6), models[1], Integer.parseInt(item.getQuantity()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -151,6 +154,40 @@ public class ProformaInvoice {
 		list.add(totalVolume);
 		list.add(errorCode);
 		return list;
+	}
+	
+	public double[] getStats(Item item) {
+		if (item == null)
+			return null;
+		
+		String[] models = null;
+		try {
+			models = Util.fetchModel(this.product_file_path, item.getItemNumber());
+		} catch (InvalidFormatException | IOException e) {
+			e.printStackTrace();
+		}
+
+		if (models != null) {
+
+			double[] stats = null;
+			try {
+				stats = Util.fetchDimensions(this.dimension_file_path, models[0].substring(0, 6), models[1], Integer.parseInt(item.getQuantity()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			if (stats != null && stats.length == 3) {
+				return new double[] { Integer.parseInt(item.getQuantity()), stats[0], stats[1], stats[2], 1 };
+
+			} else {
+				// stats is null = model number not found
+				return new double[] { -2 };
+			}
+		} else {
+			// models is null = itemNum not found
+			return new double[] { -1 };
+		}
+		
 	}
 	
 	public double getTotalExclTaxAmount() {

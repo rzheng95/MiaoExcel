@@ -17,8 +17,10 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
-import com.rzheng.excel.util.Constants;
-import com.rzheng.excel.util.Util;
+import com.rzheng.magnussen.ProformaInvoice;
+import com.rzheng.magnussen.ShippingInstructions;
+import com.rzheng.util.Constants;
+import com.rzheng.util.Util;
 
 public class ShippingOrder {
 	private final int CONSIGNEE_ROW = 8, CONSIGNEE_COL = 0;
@@ -111,39 +113,39 @@ public class ShippingOrder {
 		ShippingInstructions si = new ShippingInstructions(si_pdf_path);
 		
 		// Consignee
-		cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
 		String consignee = si.getConsignee();
 		if(consignee != null) {
+			cell = worksheet.getRow(CONSIGNEE_ROW).getCell(CONSIGNEE_COL);
 			cell.setCellValue(consignee);
 		} else {
 			error += "ERROR: Consignee not found.\n" +
 					"错误： 找不到Consignee.\n";
 		}
 		
-		// Notify Party
-		cell = worksheet.getRow(NOTIFY_ROW).getCell(NOTIFY_COL);
+		// Notify Party	
 		String notifyParty = si.getNotifyParty();
 		if(notifyParty != null) {
+			cell = worksheet.getRow(NOTIFY_ROW).getCell(NOTIFY_COL);
 			cell.setCellValue(notifyParty);
 		} else {
 			error += "ERROR: Notify Party not found.\n" +
 					"错误： 找不到Notify Party.\n";
 		}
 		
-		// Ship-to Address
-		cell = worksheet.getRow(SHIP_TO_ADDRESS_ROW).getCell(SHIP_TO_ADDRESS_COL);
+		// Ship-to Address	
 		String shipToAddress = si.getShipToAddress();
 		if(shipToAddress != null) {
+			cell = worksheet.getRow(SHIP_TO_ADDRESS_ROW).getCell(SHIP_TO_ADDRESS_COL);
 			cell.setCellValue(shipToAddress);
 		} else {
 			error += "ERROR: Ship-to Address not found.\n" +
 					"错误： 找不到Ship-to Address.\n";
 		}
 		
-		// Forwarder
-		cell = worksheet.getRow(FORWARDER_ROW).getCell(FORWARDER_COL);
+		// Forwarder	
 		String forwarder = si.getForwarder();
 		if(forwarder != null) {
+			cell = worksheet.getRow(FORWARDER_ROW).getCell(FORWARDER_COL);
 			cell.setCellValue(forwarder);
 		} else {
 			error += "ERROR: Forwarder not found.\n" +
@@ -151,9 +153,9 @@ public class ShippingOrder {
 		}
 		
 		// Port of Discharge
-		cell = worksheet.getRow(PORT_OF_DISCHARGE_ROW).getCell(PORT_OF_DISCHARGE_COL);
 		String portOfDischarge = si.getPortOfDischarge();
 		if(portOfDischarge != null) {
+			cell = worksheet.getRow(PORT_OF_DISCHARGE_ROW).getCell(PORT_OF_DISCHARGE_COL);
 			cell.setCellValue(portOfDischarge);
 			
 			cell = worksheet.getRow(SEA_AIR_ROW).getCell(SEA_AIR_COL);
@@ -166,10 +168,10 @@ public class ShippingOrder {
 					"错误： 找不到Port of Discharge.\n";
 		}
 		
-		// Port of Loading
-		cell = worksheet.getRow(PORT_OF_LOADING_ROW).getCell(PORT_OF_LOADING_COL);
+		// Port of Loading	
 		String portOfLoading = si.getPortOfLoading();
 		if(portOfLoading != null) {
+			cell = worksheet.getRow(PORT_OF_LOADING_ROW).getCell(PORT_OF_LOADING_COL);
 			cell.setCellValue(portOfLoading);
 		} else {
 			error += "ERROR: Port of Loading not found.\n" +
@@ -177,19 +179,19 @@ public class ShippingOrder {
 		}
 		
 		// Destination (Place of Delivery)
-		cell = worksheet.getRow(DESTINATION_ROW).getCell(DESTINATION_COL);
 		String destination = si.getDestination();
 		if(destination != null) {
+			cell = worksheet.getRow(DESTINATION_ROW).getCell(DESTINATION_COL);
 			cell.setCellValue(destination);
 		} else {
 			error += "ERROR: Destination not found.\n" +
 					"错误： 找不到Destination.\n";
 		}
 		
-		// PO #
-		cell = worksheet.getRow(PO_ROW).getCell(PO_COL);
+		// PO #	
 		String poNumber = si.getPoNumber();
 		if(poNumber != null) {
+			cell = worksheet.getRow(PO_ROW).getCell(PO_COL);
 			cell.setCellValue(poNumber);
 			String[] arr = poNumber.split(" ");
 			if (so_xls_path.trim().isEmpty()) {
@@ -210,10 +212,10 @@ public class ShippingOrder {
 					"错误： 找不到PO #.\n";
 		}
 		
-		// CPO #
-		cell = worksheet.getRow(CPO_ROW).getCell(CPO_COL);
+		// CPO #	
 		String cpoNumber = si.getCpoNumber();
 		if(cpoNumber != null) {
+			cell = worksheet.getRow(CPO_ROW).getCell(CPO_COL);
 			cell.setCellValue(cpoNumber);
 		} else {
 			error += "ERROR: CPO # not found.\n" +
@@ -239,9 +241,9 @@ public class ShippingOrder {
 		}
 		
 		// Bill of Lading Requirement
-		cell = worksheet.getRow(BILL_OF_LADING_REQUIREMENT_ROW).getCell(BILL_OF_LADING_REQUIREMENT_COL);
 		String billOfLading = si.getBillOfLadingRequirement();
 		if(billOfLading != null) {
+			cell = worksheet.getRow(BILL_OF_LADING_REQUIREMENT_ROW).getCell(BILL_OF_LADING_REQUIREMENT_COL);
 			cell.setCellValue(billOfLading);
 		} else {
 			error += "ERROR: Bill of Lading Requirement not found.\n" +
@@ -256,7 +258,7 @@ public class ShippingOrder {
 		*/
 		ProformaInvoice pi = new ProformaInvoice(product_file_path, dimension_file_path, pi_pdf_path);
 		
-		List<Object> stats = pi.getStats(pi.getItems());
+		List<Object> stats = pi.getTotalStats(pi.getItems());
 		
 		if (stats != null) {
 			

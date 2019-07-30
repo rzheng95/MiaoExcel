@@ -1,4 +1,4 @@
-package com.rzheng.excel.util;
+package com.rzheng.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +25,6 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import io.github.jonathanlink.PDFLayoutTextStripper;
-import net.sourceforge.lept4j.util.LoadLibs;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -65,10 +64,24 @@ public final class Util {
 	
 	public static String correctXlsFilename(String xls_filename) {
 		if (!xls_filename.contains(".xls") && !xls_filename.isEmpty())
-			xls_filename = xls_filename + ".xls";
+			xls_filename += ".xls";
 		if (xls_filename.contains(".xlsx"))
 			xls_filename = xls_filename.substring(0, xls_filename.length() - 1);
 		return xls_filename;
+	}
+	
+	public static String correctXlsxFilename(String xlsx_filename) {
+		if (xlsx_filename.contains(".xls")) {
+			if (xlsx_filename.contains(".xlsx")) {
+				return xlsx_filename;
+			}
+			xlsx_filename += "x";
+		} else {
+			if (!xlsx_filename.isEmpty()) {
+				xlsx_filename += ".xlsx";
+			}
+		}
+		return xlsx_filename;
 	}
 	
 	public static double extractNumberFromAmount(String amount) {
@@ -148,14 +161,15 @@ public final class Util {
 		return text; 
 	}
 	
-	// Inaccurate reading from low resolution images. e.g. 8 reads $
-	// https://github.com/tesseract-ocr/tessdata
-	public static String readImage(String img_path) {
+	// ** Inaccurate reading from low resolution images. e.g. 8 reads $ **
+	// Download language packs: https://github.com/tesseract-ocr/tessdata
+	public static String readImage(String tessdata_path, String language, String img_path) {
 		String text = null;
 
 		ITesseract instance = new Tesseract();
-		instance.setDatapath("Y:\\Users\\Richard\\spring-tool-suite-4-workspace\\MiaoExcel\\tessdata");
-		instance.setLanguage("eng");
+		
+		instance.setDatapath(tessdata_path); // "Y:\\Users\\Richard\\spring-tool-suite-4-workspace\\MiaoExcel\\tessdata"
+		instance.setLanguage(language); // "eng"
 
 		try {
 			text = instance.doOCR(new File(img_path));
@@ -193,7 +207,7 @@ public final class Util {
 	
 	/*
 	
-	数量     	净重			毛重			体积
+	数�?     	净�?			毛�?			体积
 	24.00	1513.20		1644.00 	49.62 
 	0.00 	0.00 		0.00 		0.00 
 	24.00 	780.00 		900.00 		21.70 
@@ -204,7 +218,7 @@ public final class Util {
 
 	 */
 	
-	public static double[] fetchStats(String dimension_file_path, String modelNumber, String type, int quantity) throws IOException {
+	public static double[] fetchDimensions(String dimension_file_path, String modelNumber, String type, int quantity) throws IOException {
 
 		// for any Excel version both .xls and .xlsx
 		Workbook wb = WorkbookFactory.create(new File(dimension_file_path));

@@ -1,4 +1,4 @@
-package com.rzheng.excel.util;
+package com.rzheng.util;
 
 public final class Constants 
 {
@@ -36,7 +36,7 @@ public final class Constants
 	public static final String CONTRACT = "Contract";
 	public static final String INVOICE = "Invoice";
 	public static final String PACKING_LIST = "Packing list";
-	public static final String BAO_GUAN_DAN = "报关单";
+	public static final String BAO_GUAN_DAN = "报关�?�";
 	public static final String TOTAL = "TOTAL";
 	public static final String SUB_TOTAL = "SUB TOTAL";
 	public static final String TOTAL_EXCL_TAX = "TOTAL EXCL. TAX";
@@ -58,6 +58,13 @@ public final class Constants
 	
 	
 	
+	// Logistics
+	// Unitex Logistics
+	public static final String MBL = "MBL:"; // Master B/L number
+	public static final String UNITEX_LOGISTICS = "UNITEX LOGISTICS";
+	public static final String ETD = "ETD:";
+	public static final String ETA = "ETA:";
+	public static final String VV = "V/V:"; // Mother Vessel
 }
 
 
