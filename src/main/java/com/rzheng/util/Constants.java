@@ -69,6 +69,7 @@ public final class Constants
 	
 	// Modway PI
 	public static final String CONTAINER_NO = "CONTAINER NO.:";
+	public static final String PURCHASE_ORDER_NO = "Purchase Order No.:";
 }
 
 

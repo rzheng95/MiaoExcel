@@ -33,7 +33,7 @@ public class Main
 //		System.out.println(cc_error);
 		
 		CustomsClearanceModway cc = new CustomsClearanceModway("modway/9395/0009395-PI-MODWAY-041919(1).xls", 
-				"modway/9395/0009395 HES19050515-海运提单(代理).PDF", "modway/9395/9395分货-有净毛体(1).xls", "modway/CI & PL Template.xlsx", "cc_modway_test", "");
+				"modway/9395/0009395 HES19050515-海运提单(代理).PDF", "modway/9395/9395分货-有净毛体(1).xls", "modway/CI & PL Template.xlsx", "modway/cc_modway_test", "", "etd", "eta");
 		
 		System.out.println(cc.run());
 		
