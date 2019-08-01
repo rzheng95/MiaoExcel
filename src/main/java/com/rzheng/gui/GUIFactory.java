@@ -43,13 +43,15 @@ public final class GUIFactory {
 		return button;
 	}
 
-	public static JMenu createMenu(final JFrame frame) {
+	public static void createMenu(final JFrame frame) {
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
+		
+		JMenu mnModway = new JMenu("Modway");
+		menuBar.add(mnModway);
 
-		JMenu mnSelect = new JMenu("Select");
-		menuBar.add(mnSelect);
-		JMenu menu = new JMenu();
+		JMenu mnMagnussen = new JMenu("Magnussen");
+		menuBar.add(mnMagnussen);
 
 		JMenuItem menuItem_shippingOrder = new JMenuItem("Shipping Order");
 		menuItem_shippingOrder.addActionListener(new ActionListener() {
@@ -66,17 +68,26 @@ public final class GUIFactory {
 				new CustomsDeclarationGUI().setVisible(true);
 			}
 		});
-
-		JMenuItem menuItem_exit = new JMenuItem("Exit");
-		menuItem_exit.addActionListener(new ActionListener() {
+		
+		JMenuItem menuItem_customsClearance = new JMenuItem("Customs Cleanrance");
+		menuItem_customsClearance.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				frame.dispose();
+				new CustomsClearanceGUI().setVisible(true);
 			}
 		});
 
-		mnSelect.add(menuItem_exit);
-		mnSelect.add(menuItem_shippingOrder);
-		mnSelect.add(menuItem_customsDeclaration);
+//		JMenuItem menuItem_exit = new JMenuItem("Exit");
+//		menuItem_exit.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				System.exit(0);
+//			}
+//		});
+//		mnMagnussen.add(menuItem_exit);
+		
+		mnMagnussen.add(menuItem_shippingOrder);
+		mnMagnussen.add(menuItem_customsDeclaration);
+		mnMagnussen.add(menuItem_customsClearance);
 
 		JMenu mnAbout = new JMenu("About");
 		JMenuItem menuItem_readMe = new JMenuItem("README");
@@ -98,7 +109,6 @@ public final class GUIFactory {
 
 		menuBar.add(mnAbout);
 
-		return menu;
 	}
 	
 	public static boolean isTextFieldEmpty(List<JTextField> textfields) {

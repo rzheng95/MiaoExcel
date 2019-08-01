@@ -1,4 +1,4 @@
-package com.rzheng.excel;
+package com.rzheng.magnussen;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +17,6 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
-import com.rzheng.magnussen.ProformaInvoice;
-import com.rzheng.magnussen.ShippingInstructions;
 import com.rzheng.util.Constants;
 import com.rzheng.util.Util;
 

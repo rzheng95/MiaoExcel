@@ -1,4 +1,4 @@
-package com.rzheng.excel;
+package com.rzheng.magnussen;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,8 +16,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 
-import com.rzheng.magnussen.ProformaInvoice;
-import com.rzheng.magnussen.ShippingInstructions;
 import com.rzheng.util.Constants;
 import com.rzheng.util.Util;
 

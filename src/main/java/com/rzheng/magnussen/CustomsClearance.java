@@ -1,4 +1,4 @@
-package com.rzheng.excel;
+package com.rzheng.magnussen;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,8 +24,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.rzheng.logistics.companies.UnitexLogistics;
-import com.rzheng.magnussen.ProformaInvoice;
-import com.rzheng.magnussen.ShippingInstructions;
 import com.rzheng.util.Constants;
 import com.rzheng.util.Item;
 import com.rzheng.util.Util;
@@ -446,21 +444,13 @@ public class CustomsClearance
 			error += "ERROR: Cannot get stats.\n";
 		}
 		
-
-		
-		
-		
-		
-		
-		
-		
+    
         
-        
-//		if (cc_xls_path.trim().isEmpty()) {
-//			String[] poNum = si.getPoNumber().split(" ");
-//			if (poNum != null && poNum.length >= 3)
-//				cc_xls_path = "Magnussen CI&PL&7 Point " + poNum[2]; // + PO
-//        }
+		if (cc_xlsx_path.trim().isEmpty()) {
+			String[] poNum = si.getPoNumber().split(" ");
+			if (poNum != null && poNum.length >= 3)
+				cc_xlsx_path = "Magnussen CI&PL&7 Point " + poNum[2]; // + PO
+        }
 		
 		
 		// Close the InputStream

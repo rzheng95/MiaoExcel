@@ -65,6 +65,10 @@ public final class Constants
 	public static final String ETD = "ETD:";
 	public static final String ETA = "ETA:";
 	public static final String VV = "V/V:"; // Mother Vessel
+	
+	
+	// Modway PI
+	public static final String CONTAINER_NO = "CONTAINER NO.:";
 }
 
 

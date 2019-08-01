@@ -7,9 +7,11 @@ import javax.swing.SwingUtilities;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import com.rzheng.excel.CustomsClearance;
+import com.rzheng.gui.CustomsClearanceGUI;
 import com.rzheng.gui.CustomsDeclarationGUI;
 import com.rzheng.gui.ShippingOrderGUI;
+import com.rzheng.magnussen.CustomsClearance;
+import com.rzheng.modway.CustomsClearanceModway;
 import com.rzheng.util.Util;
 
 public class Main
@@ -25,13 +27,15 @@ public class Main
 //		String so_error = new ShippingOrder().run("052059 SI.pdf", "052059 PI.pdf", "", "Shipping Order Template.xls");
 //		System.out.println(so_error);
 
-		CustomsClearance cc = new CustomsClearance("magnussen 产品对照表 201905025.xlsx", "净毛体统计2016.09.07(1).xls", "052059 SI.pdf", "052059 PI.pdf", 
-				"Unitex Logistics", "指代/Unitex Logistics Ltd 051490.docx", "cc_test", "Customs Clearance Template.xlsx", "invoice number", "container number", "seal number");
-		String cc_error = cc.run();
-		System.out.println(cc_error);
+//		CustomsClearance cc = new CustomsClearance("magnussen 产品对照表 201905025.xlsx", "净毛体统计2016.09.07(1).xls", "052059 SI.pdf", "052059 PI.pdf", 
+//				"Unitex Logistics", "指代/Unitex Logistics Ltd 051490.docx", "cc_test", "Customs Clearance Template.xlsx", "invoice number", "container number", "seal number");
+//		String cc_error = cc.run();
+//		System.out.println(cc_error);
 		
-//		String text = Util.readDocument("指代/Unitex Logistics Ltd 051490.docx");
-//		System.out.println(text);
+		CustomsClearanceModway cc = new CustomsClearanceModway("modway/9395/0009395-PI-MODWAY-041919(1).xls", 
+				"modway/9395/0009395 HES19050515-海运提单(代理).PDF", "modway/9395/9395分货-有净毛体(1).xls", "modway/CI & PL Template.xlsx", "cc_modway_test", "");
+		
+		System.out.println(cc.run());
 		
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -41,6 +45,7 @@ public class Main
 //				new Login();
 //				new ShippingOrderGUI();
 //				new CustomsDeclarationGUI();
+//				new CustomsClearanceGUI();
 			}
 			
 		});
