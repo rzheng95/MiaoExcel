@@ -27,6 +27,8 @@ import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
+import com.rzheng.modway.Item;
+
 import io.github.jonathanlink.PDFLayoutTextStripper;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
@@ -351,6 +353,20 @@ public final class Util {
             }
         }
     }
+	
+	public static Item findItem(List<Item> items, String styleNum, String vendorStyleNum) {
+		
+		if (items != null && !items.isEmpty() && styleNum != null && vendorStyleNum != null) {
+			for (Item item : items) {
+				// Style # (Part No.)
+				// Vendor Style # (Item #)
+				if (item.getPartNum().equalsIgnoreCase(styleNum) && item.getItemNum().equalsIgnoreCase(vendorStyleNum)) {
+					return item;
+				}
+			}
+		}
+		return null;
+	}
 }
 
 

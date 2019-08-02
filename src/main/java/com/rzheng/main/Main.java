@@ -8,6 +8,7 @@ import javax.swing.SwingUtilities;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import com.rzheng.gui.CustomsClearanceGUI;
+import com.rzheng.gui.CustomsClearanceModwayGUI;
 import com.rzheng.gui.CustomsDeclarationGUI;
 import com.rzheng.gui.ShippingOrderGUI;
 import com.rzheng.magnussen.CustomsClearance;
@@ -32,10 +33,10 @@ public class Main
 //		String cc_error = cc.run();
 //		System.out.println(cc_error);
 		
-		CustomsClearanceModway cc = new CustomsClearanceModway("modway/9395/0009395-PI-MODWAY-041919(1).xls", 
-				"modway/9395/0009395 HES19050515-海运提单(代理).PDF", "modway/9395/9395分货-有净毛体(1).xls", "modway/Modway Customs Clearance Template.xls", "modway/cc_modway_test", "", "etd", "eta");
-		
-		System.out.println(cc.run());
+//		CustomsClearanceModway cc = new CustomsClearanceModway("modway/9395/0009395-PI-MODWAY-041919(1).xls", 
+//				"modway/9395/0009395 HES19050515-海运提单(代理).PDF", "modway/9395/9395分货-有净毛体(1).xls", "modway/Modway Customs Clearance Template.xls", "modway/cc_modway_test", "", "etd", "eta");
+//		
+//		System.out.println(cc.run());
 		
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -46,6 +47,7 @@ public class Main
 //				new ShippingOrderGUI();
 //				new CustomsDeclarationGUI();
 //				new CustomsClearanceGUI();
+				new CustomsClearanceModwayGUI();
 			}
 			
 		});

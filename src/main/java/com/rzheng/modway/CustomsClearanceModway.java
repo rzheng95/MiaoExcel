@@ -2,7 +2,6 @@ package com.rzheng.modway;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -11,14 +10,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.rzheng.util.Util;
 
@@ -48,6 +46,10 @@ public class CustomsClearanceModway
 	private final int UNIT_PRICE_COL = 9;
 	private final int TOTAL_AMOUNT_COL = 10;
 	
+	private final int NET_WEIGHT_COL = 8;
+	private final int GROSS_WEIGHT_COL = 9;
+	private final int CMB_COL = 10;
+	
 	// Read the spreadsheet that needs to be updated
 	private FileInputStream fileInput;
 	// Access the workbook
@@ -61,21 +63,21 @@ public class CustomsClearanceModway
 	private String error;
 	private String pi_path;
 	private String oceanBillOfLading_path;
-	private String product_dimension_path;
+	private String product_dimension_chart_path;
 	private String cc_template;
-	private String cc_xlsx_path;
+	private String cc_xls_path;
 	private String invoiceNumber;
 	private String etd;
 	private String eta;
 	
-	public CustomsClearanceModway(String pi_path, String oceanBillOfLading_path, String product_dimension_path, String cc_template, String cc_xlsx_path, String invoiceNumber,
+	public CustomsClearanceModway(String pi_path, String oceanBillOfLading_path, String product_dimension_chart_path, String cc_template, String cc_xls_path, String invoiceNumber,
 			String etd, String eta) {
 		this.error = "";
 		this.pi_path = pi_path;
 		this.oceanBillOfLading_path = oceanBillOfLading_path;
-		this.product_dimension_path = product_dimension_path;
+		this.product_dimension_chart_path = product_dimension_chart_path;
 		this.cc_template = cc_template;
-		this.cc_xlsx_path = cc_xlsx_path;
+		this.cc_xls_path = cc_xls_path;
 		this.invoiceNumber = invoiceNumber;
 		this.etd = etd;
 		this.eta = eta;
@@ -83,22 +85,6 @@ public class CustomsClearanceModway
 	
 	
 	public String run() throws IOException {
-		
-//		try {
-//			this.fileInput = new FileInputStream(new File(cc_template));
-//		} catch (FileNotFoundException e) {
-//			error = "ERROR: Customs Declaration Template Not Found!\n" + this.cc_template; 
-//			e.printStackTrace();
-//			return error;
-//		}
-//		
-//		try {
-//			this.workbook = new Workbook(fileInput);
-//		} catch (IOException e) {
-//			error = "ERROR: FileInputStream Exception";
-//			e.printStackTrace();
-//			return error;
-//		}
 		
 		this.workbook =  WorkbookFactory.create(new File(cc_template));
 		
@@ -159,13 +145,29 @@ public class CustomsClearanceModway
 		
 		// PO #
 		String poNumber = pi.getPoNumber();
+		int numOfContainers = pi.getNumberOfContainer();
 		if (poNumber != null) {
 			cell = worksheet.getRow(PO_NUMBER_ROW).getCell(PO_NUMBER_COL);
 			cell.setCellValue(poNumber);
 			
-			workbook.setSheetName(0, poNumber + " MASTER CI");
-			if (this.cc_xlsx_path.isEmpty()) {
-				this.cc_xlsx_path = poNumber + " CI & PL";
+			
+			if (this.cc_xls_path.isEmpty()) {
+				this.cc_xls_path = poNumber + " CI & PL";
+			}
+			
+			// Rename sheets
+			this.workbook.setSheetName(0, poNumber + " MASTER CI");
+			this.workbook.setSheetName(1, poNumber + "-1 CI");
+			this.workbook.setSheetName(2, poNumber + "-1 PL");
+			if (numOfContainers > 0) {
+				for (int i = 2; i <= numOfContainers; i++) {
+					this.workbook.cloneSheet(1);
+					this.workbook.setSheetName(i*2-1, poNumber + "-" + i + " CI");
+					this.workbook.cloneSheet(2);
+					this.workbook.setSheetName(i*2, poNumber + "-" + i + " PL");
+				}
+			} else {
+				error += "ERROR: Container No. does not contain a * sign.\n";
 			}
 		} else {
 			error += "ERROR: Purcharse Order No. (PO #) not found.\n" + 
@@ -196,7 +198,7 @@ public class CustomsClearanceModway
 		
 
 		
-		// Items 
+		// Master CI 
 		List<Item> items = pi.getItems();
 
 		if (items != null && !items.isEmpty()) {
@@ -215,16 +217,13 @@ public class CustomsClearanceModway
 				cell = worksheet.getRow(this.item_row).getCell(DESCRIPTION_COL);
 				cell.setCellValue(item.getDescription());
 				
-				// Material?
+				// Material
+				cell = worksheet.getRow(this.item_row).getCell(MATERIAL_COL);
+				cell.setCellValue("100% Polyester");			
 				
-				
-				
-				
-				// HTS Code?
-				
-				
-				
-				
+				// HTS Code
+				cell = worksheet.getRow(this.item_row).getCell(HTS_CODE_COL);
+				cell.setCellValue("9401.61.9000");
 				
 				// QTY 
 				cell = worksheet.getRow(this.item_row).getCell(QUANTITY_COL);
@@ -247,48 +246,215 @@ public class CustomsClearanceModway
 				cell.setCellValue(item.getTotalAmount());
 				
 				this.item_row++;
-				
-				
-				
-				if (worksheet.getRow(this.item_row) == null)
-					worksheet.createRow(this.item_row);
-				
+	
 			}
 			
 			// Removed default 2 empty rows
 			worksheet.removeRow(worksheet.getRow(this.item_row));
 			worksheet.removeRow(worksheet.getRow(this.item_row+1));
 		} else {
-			
+			error += "ERROR: Items not found in given PI.\n" + 
+					"错误： 找不到任何产品在PI里.\n";
+		}
+		
+		
+		
+		// CI and PI for each container
+		ProductDimensionChart pdc = new ProductDimensionChart(product_dimension_chart_path);
+		
+		for (int i = 1; i <= numOfContainers; i++) {
+			List<Item> containerItems = pdc.getContainerItems(i);
+			if (containerItems != null) {
+				
+				
+//--------------PL-------------------------------------------------------------------------------------------------------
+				this.item_row = 20;
+				worksheet = workbook.getSheet(poNumber + "-" + i + " PL");
+				
+				// PL - Container Qty
+				containerQty = pi.getContainerSize();
+				if (containerQty != null) {
+					containerQty = "1*" + containerQty;
+					cell = worksheet.getRow(CONTAINER_QTY_ROW).getCell(CONTAINER_QTY_COL);
+					cell.setCellValue(containerQty);
+				}
+				
+				int totalCarton = 0;
+				double totalGrossWeight = 0.0;
+				double totalCbm = 0.0;
+				
+				for (Item containerItem : containerItems) {
+					
+					Item item = Util.findItem(items, containerItem.getStyleNum(), containerItem.getVendorStyleNum());
+					
+					Util.copyRow(workbook, worksheet, this.item_row, this.item_row + 1);
+					worksheet.getRow(this.item_row + 1 ).setHeight(worksheet.getRow(this.item_row).getHeight());
+					// Style # (Part No.)
+					cell = worksheet.getRow(this.item_row).getCell(STYLE_NUMBER_COL);
+					cell.setCellValue(containerItem.getStyleNum());
+					
+					// Description
+					cell = worksheet.getRow(this.item_row).getCell(DESCRIPTION_COL);
+					cell.setCellValue(containerItem.getDescription());
+					
+					// Vendor Style # (Item #)
+					cell = worksheet.getRow(this.item_row).getCell(VENDOR_STYLE_NUMBER_COL);
+					cell.setCellValue(containerItem.getVendorStyleNum());
+					
+					// QTY 
+					double quantity = containerItem.getQuantity();
+					cell = worksheet.getRow(this.item_row).getCell(QUANTITY_COL);
+					cell.setCellValue(quantity);
+					
+					// Carton = QTY
+					totalCarton += quantity;
+					cell = worksheet.getRow(this.item_row).getCell(CARTON_COL);
+					cell.setCellValue(quantity);
+					
+					// Material
+					cell = worksheet.getRow(this.item_row).getCell(MATERIAL_COL);
+					cell.setCellValue("100% Polyester");			
+					
+					// HTS Code
+					cell = worksheet.getRow(this.item_row).getCell(HTS_CODE_COL);
+					cell.setCellValue("9401.61.9000");
+					
+					// Net Weight
+					cell = worksheet.getRow(this.item_row).getCell(NET_WEIGHT_COL);
+					cell.setCellValue(containerItem.getNetWeight());
+						
+					// Gross Weight
+					double grossWeight = containerItem.getGrossWeight();
+					totalGrossWeight += grossWeight;
+					cell = worksheet.getRow(this.item_row).getCell(GROSS_WEIGHT_COL);
+					cell.setCellValue(grossWeight);
+					
+					// CMB
+					double cbm = containerItem.getCbm();
+					totalCbm += cbm;
+					cell = worksheet.getRow(this.item_row).getCell(CMB_COL);
+					cell.setCellValue(cbm);
+					
+					this.item_row++;
+
+				}
+				// Removed default 2 empty rows
+				worksheet.removeRow(worksheet.getRow(this.item_row));
+				worksheet.removeRow(worksheet.getRow(this.item_row+1));
+				
+				// PL - Container #
+				String containerNum = oblm.getContainerNumber(totalCarton, Math.round(totalGrossWeight * 100.0) / 100.0 , Math.round(totalCbm * 100.0) / 100.0);
+				if (containerNum != null) {
+					cell = worksheet.getRow(CONTAINER_NUMBERS_ROW).getCell(CONTAINER_NUMBERS_COL);
+					cell.setCellValue(containerNum);
+				}
+				
+				
+//--------------CI-------------------------------------------------------------------------------------------------------
+				this.item_row = 20;
+				worksheet = workbook.getSheet(poNumber + "-" + i + " CI");
+				
+				// CI - Container Qty
+				if (containerQty != null) {
+					cell = worksheet.getRow(CONTAINER_QTY_ROW).getCell(CONTAINER_QTY_COL);
+					cell.setCellValue(containerQty);
+				}
+				
+				// CI - Container #
+				if (containerNum != null) {
+					cell = worksheet.getRow(CONTAINER_NUMBERS_ROW).getCell(CONTAINER_NUMBERS_COL);
+					cell.setCellValue(containerNum);
+				}
+				
+				for (Item containerItem : containerItems) {
+					
+					Item item = Util.findItem(items, containerItem.getStyleNum(), containerItem.getVendorStyleNum());
+					
+					Util.copyRow(workbook, worksheet, this.item_row, this.item_row + 1);
+					worksheet.getRow(this.item_row + 1 ).setHeight(worksheet.getRow(this.item_row).getHeight());
+					// Style # (Part No.)
+					cell = worksheet.getRow(this.item_row).getCell(STYLE_NUMBER_COL);
+					cell.setCellValue(containerItem.getStyleNum());
+					
+					// Description
+					cell = worksheet.getRow(this.item_row).getCell(DESCRIPTION_COL);
+					cell.setCellValue(containerItem.getDescription());
+					
+					// Vendor Style # (Item #)
+					cell = worksheet.getRow(this.item_row).getCell(VENDOR_STYLE_NUMBER_COL);
+					cell.setCellValue(containerItem.getVendorStyleNum());
+					
+					// QTY 
+					double quantity = containerItem.getQuantity();
+					cell = worksheet.getRow(this.item_row).getCell(QUANTITY_COL);
+					cell.setCellValue(quantity);
+					
+					// Carton = QTY
+					cell = worksheet.getRow(this.item_row).getCell(CARTON_COL);
+					cell.setCellValue(quantity);
+					
+					// Package Price 
+					cell = worksheet.getRow(this.item_row).getCell(PACKAGE_PRICE_COL);
+					cell.setCellValue(0.00);
+					
+					// Material
+					cell = worksheet.getRow(this.item_row).getCell(MATERIAL_COL);
+					cell.setCellValue("100% Polyester");			
+					
+					// HTS Code
+					cell = worksheet.getRow(this.item_row).getCell(HTS_CODE_COL);
+					cell.setCellValue("9401.61.9000");
+
+					if (item != null) {
+						// Unit Price
+						cell = worksheet.getRow(this.item_row).getCell(UNIT_PRICE_COL);
+						cell.setCellValue(item.getUnitPrice());
+						
+						// Total Amount
+						cell = worksheet.getRow(this.item_row).getCell(TOTAL_AMOUNT_COL);
+						cell.setCellValue(quantity * item.getUnitPrice());
+					} else {
+						error += "ERROR: Please investigate Style #: "+containerItem.getStyleNum()+", Vendor Style #: "+containerItem.getVendorStyleNum()+".\n" + 
+								"错误：请检查Style #: "+containerItem.getStyleNum()+", Vendor Style #: "+containerItem.getVendorStyleNum()+".\n";
+					}
+					
+					this.item_row++;
+
+				}
+				// Removed default 2 empty rows
+				worksheet.removeRow(worksheet.getRow(this.item_row));
+				worksheet.removeRow(worksheet.getRow(this.item_row+1));
+				
+			} else {
+				error += "ERROR: Container measurements not found for container " + i + ".\n" + 
+						"错误： 找不到柜"+i+"的分货净毛体信息.\n";
+			}
 		}
 		
 
 		
 		
-		
 		if (error.isEmpty()) {
-			error = "Success!";
-
-			// refreshes all formulas existed in the spreadsheet
+			error = "Generated without error.";
+		}
+		// refreshes all formulas existed in the spreadsheet
 //			XSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
-			HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
+		HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
 
-			cc_xlsx_path = Util.correctFileFormat(".xls", cc_xlsx_path);
+		cc_xls_path = Util.correctFileFormat(".xls", cc_xls_path);
 
-			// Open FileOutputStream to write updates
-			FileOutputStream output_file;
-			
-			try {
-				output_file = new FileOutputStream(new File(cc_xlsx_path));
-				// write changes
-				workbook.write(output_file);
-				// close the stream
-				output_file.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+		// Open FileOutputStream to write updates
+		FileOutputStream output_file;
+
+		try {
+			output_file = new FileOutputStream(new File(cc_xls_path));
+			// write changes
+			workbook.write(output_file);
+			// close the stream
+			output_file.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return error;

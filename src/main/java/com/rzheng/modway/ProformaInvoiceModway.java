@@ -20,7 +20,7 @@ import com.rzheng.util.Constants;
 public class ProformaInvoiceModway {
 	public static void main(String[] args) throws IOException {
 		ProformaInvoiceModway pi = new ProformaInvoiceModway("modway/9395/0009395-PI-MODWAY-041919(1).xls");
-		System.out.println(pi.getItems());
+		System.out.println(pi.getContainerQty());
 	}
 	
 	private String pi_path;
@@ -56,6 +56,36 @@ public class ProformaInvoiceModway {
 				}
 			}
 
+		return null;
+	}
+	
+	public int getNumberOfContainer() {
+		
+		String containerQty = getContainerQty();
+		if (containerQty != null) {
+			if (containerQty.contains("*")) {
+				String[] arr = containerQty.split("\\*");
+				if (arr != null && arr.length >= 1) {
+					return Integer.parseInt(arr[0].trim());
+				}
+			}
+		}
+		
+		return -1;
+	}
+	
+	public String getContainerSize() {
+		
+		String containerQty = getContainerQty();
+		if (containerQty != null) {
+			if (containerQty.contains("*")) {
+				String[] arr = containerQty.split("\\*");
+				if (arr != null && arr.length >= 2) {
+					return arr[1].trim();
+				}
+			}
+		}
+		
 		return null;
 	}
 	

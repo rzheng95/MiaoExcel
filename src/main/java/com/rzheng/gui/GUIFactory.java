@@ -76,6 +76,7 @@ public final class GUIFactory {
 				new CustomsClearanceGUI().setVisible(true);
 			}
 		});
+		
 
 //		JMenuItem menuItem_exit = new JMenuItem("Exit");
 //		menuItem_exit.addActionListener(new ActionListener() {
@@ -88,6 +89,18 @@ public final class GUIFactory {
 		mnMagnussen.add(menuItem_shippingOrder);
 		mnMagnussen.add(menuItem_customsDeclaration);
 		mnMagnussen.add(menuItem_customsClearance);
+		
+		
+		JMenuItem menuItem_customsClearanceModway = new JMenuItem("Customs Cleanrance");
+		menuItem_customsClearanceModway.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				new CustomsClearanceModwayGUI().setVisible(true);
+			}
+		});
+		
+		mnModway.add(menuItem_customsClearanceModway);
+		
 
 		JMenu mnAbout = new JMenu("About");
 		JMenuItem menuItem_readMe = new JMenuItem("README");

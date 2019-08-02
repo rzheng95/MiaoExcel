@@ -8,7 +8,7 @@ import com.rzheng.util.Util;
 public class OceanBillOfLadingModway {
 	public static void main(String[] args) {
 		OceanBillOfLadingModway obl = new OceanBillOfLadingModway("modway/9395/0009395 HES19050515-海运提单(代理).PDF");
-		System.out.println(obl.getPlaceOfDischarge());
+		System.out.println(obl.getContainerNumber(58, 2829.8, 71.44));
 //		System.out.println(Util.readPDF(("modway/9395/0009395 HES19050515-海运提单(代理).PDF")));
 	}
 	
@@ -50,6 +50,32 @@ public class OceanBillOfLadingModway {
 					containerNumbers += arr[0] + "/";
 			}
 			return containerNumbers.substring(0, containerNumbers.length()-1); // remove the last slash
+		}
+		
+		return null;
+	}
+	
+	public String getContainerNumber(int carton, double grossWeight, double cbm) {
+		List<String> containerDescriptions = this.getContainerDescriptions();
+		if (containerDescriptions != null) {
+			for (String des : containerDescriptions) {
+				String[] arr = des.split("/");
+				if (arr != null && arr.length == 6) {
+					int indexOfCarton = arr[3].indexOf("CARTONS");
+					int carton2 = Integer.parseInt(arr[3].substring(0, indexOfCarton));
+					
+					int indexOfKgs = arr[4].indexOf("KGS");
+					double grossWeight2 = Double.parseDouble(arr[4].substring(0, indexOfKgs));
+
+					
+					int indexOfCbm = arr[5].indexOf("CBM");
+					double cbm2 = Double.parseDouble(arr[5].substring(0, indexOfCbm));
+
+					if (carton == carton2 && grossWeight == grossWeight2 && cbm == cbm2) {
+						return arr[0].trim();
+					}
+				}
+			}
 		}
 		
 		return null;
