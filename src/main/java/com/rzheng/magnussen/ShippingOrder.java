@@ -155,16 +155,13 @@ public class ShippingOrder {
 		if(portOfDischarge != null) {
 			cell = worksheet.getRow(PORT_OF_DISCHARGE_ROW).getCell(PORT_OF_DISCHARGE_COL);
 			cell.setCellValue(portOfDischarge);
-			
-			cell = worksheet.getRow(SEA_AIR_ROW).getCell(SEA_AIR_COL);
-			if (portOfDischarge.toUpperCase().contains(Constants.SEA))
-				cell.setCellValue(Constants.SEA);
-			else
-				cell.setCellValue(Constants.AIR);
 		} else {
 			error += "ERROR: Port of Discharge not found.\n" +
 					"错误： 找不到Port of Discharge.\n";
 		}
+		
+		cell = worksheet.getRow(SEA_AIR_ROW).getCell(SEA_AIR_COL);
+		cell.setCellValue(Constants.SEA);
 		
 		// Port of Loading	
 		String portOfLoading = si.getPortOfLoading();
@@ -301,15 +298,16 @@ public class ShippingOrder {
 
 		if (error.isEmpty()) {
 			error = "Success!";
-			
-			so_xls_path = Util.correctXlsFilename(so_xls_path);
-			// Open FileOutputStream to write updates
-			FileOutputStream output_file = new FileOutputStream(new File(so_xls_path));
-			// write changes
-			wb.write(output_file);
-			// close the stream
-			output_file.close();
-		} 
+		}
+		
+		so_xls_path = Util.correctXlsFilename(so_xls_path);
+		// Open FileOutputStream to write updates
+		FileOutputStream output_file = new FileOutputStream(new File(so_xls_path));
+		// write changes
+		wb.write(output_file);
+		// close the stream
+		output_file.close();
+		
 		
 		return error;
 	}

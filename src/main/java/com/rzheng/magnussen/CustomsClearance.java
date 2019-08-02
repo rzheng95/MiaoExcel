@@ -25,7 +25,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.rzheng.logistics.companies.UnitexLogistics;
 import com.rzheng.util.Constants;
-import com.rzheng.util.Item;
 import com.rzheng.util.Util;
 
 public class CustomsClearance 
@@ -459,8 +458,9 @@ public class CustomsClearance
 		
 
 
-		
-		error = "Success!";
+		if (error.isEmpty()) {
+			error = "Success!";
+		}
 
 		// refreshes all formulas existed in the spreadsheet
 		// HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);

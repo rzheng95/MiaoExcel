@@ -8,7 +8,6 @@ import java.util.List;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import com.rzheng.util.Constants;
-import com.rzheng.util.Item;
 import com.rzheng.util.Util;
 
 public class ProformaInvoice {

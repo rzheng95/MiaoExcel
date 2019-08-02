@@ -29,6 +29,7 @@ public final class Constants
 	public static final String BL = "B/L";
 	
 	public static final String ISSUE = "ISSUE";
+	public static final String ISSUED = "ISSUED";
 	public static final String SEA = "SEA";
 	public static final String AIR = "AIR";
 	
@@ -70,6 +71,8 @@ public final class Constants
 	// Modway PI
 	public static final String CONTAINER_NO = "CONTAINER NO.:";
 	public static final String PURCHASE_ORDER_NO = "Purchase Order No.:";
+	public static final String PART_NO = "PART NO.";
+	
 }
 
 

@@ -9,16 +9,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.rzheng.util.Constants;
 import com.rzheng.util.Util;
 
 public class CustomsClearanceModway 
@@ -34,6 +31,18 @@ public class CustomsClearanceModway
 	
 	private final int ETD_ROW = 16, ETD_COL = 9;
 	private final int ETA_ROW = 16, ETA_COL = 10;
+	
+	private int item_row = 20;
+	private final int STYLE_NUMBER_COL = 1;
+	private final int VENDOR_STYLE_NUMBER_COL = 2;
+	private final int DESCRIPTION_COL = 3;
+	private final int MATERIAL_COL = 4;
+	private final int HTS_CODE_COL = 5;
+	private final int QUANTITY_COL = 6;
+	private final int CARTON_COL = 7;
+	private final int PACKAGE_PRICE_COL = 8;
+	private final int UNIT_PRICE_COL = 9;
+	private final int TOTAL_AMOUNT_COL = 10;
 	
 	// Read the spreadsheet that needs to be updated
 	private FileInputStream fileInput;
@@ -178,6 +187,67 @@ public class CustomsClearanceModway
 			cell = worksheet.getRow(ETA_ROW).getCell(ETA_COL);
 			cell.setCellValue(this.eta);
 		}
+		
+
+		
+		// Items 
+		List<Item> items = pi.getItems();
+
+		if (items != null && !items.isEmpty()) {
+			for (Item item : items) {
+
+				// Style # (Part No.)
+				cell = worksheet.getRow(this.item_row).getCell(STYLE_NUMBER_COL);
+				cell.setCellValue(item.getPartNum());
+				
+				// Vendor Style # (Item #)
+				cell = worksheet.getRow(this.item_row).getCell(VENDOR_STYLE_NUMBER_COL);
+				cell.setCellValue(item.getItemNum());
+				
+				// Description
+				cell = worksheet.getRow(this.item_row).getCell(DESCRIPTION_COL);
+				cell.setCellValue(item.getDescription());
+				
+				// Material?
+				
+				
+				
+				
+				// HTS Code?
+				
+				
+				
+				
+				
+				// QTY 
+				cell = worksheet.getRow(this.item_row).getCell(QUANTITY_COL);
+				cell.setCellValue(item.getQuantity());
+				
+				// Carton = QTY
+				cell = worksheet.getRow(this.item_row).getCell(CARTON_COL);
+				cell.setCellValue(item.getQuantity());
+				
+				// Package Price 
+				cell = worksheet.getRow(this.item_row).getCell(PACKAGE_PRICE_COL);
+				cell.setCellValue(0.00);
+				
+				// Unit Price
+				cell = worksheet.getRow(this.item_row).getCell(UNIT_PRICE_COL);
+				cell.setCellValue(item.getUnitPrice());
+				
+				// Total Amount
+				cell = worksheet.getRow(this.item_row).getCell(TOTAL_AMOUNT_COL);
+				cell.setCellValue(item.getTotalAmount());
+				
+				this.item_row++;
+				if (worksheet.getRow(this.item_row) == null)
+					worksheet.createRow(this.item_row);
+			}
+		} else {
+			
+		}
+		
+
 		
 		
 		

@@ -251,19 +251,19 @@ public class CustomsDeclaration
 
 		if (error.isEmpty()) {
 			error = "Success!";
-
-			// refreshes all formulas existed in the spreadsheet
-			HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
-
-			cd_xls_path = Util.correctXlsFilename(cd_xls_path);
-
-			// Open FileOutputStream to write updates
-			FileOutputStream output_file = new FileOutputStream(new File(cd_xls_path));
-			// write changes
-			workbook.write(output_file);
-			// close the stream
-			output_file.close();
 		}
+		// refreshes all formulas existed in the spreadsheet
+		HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
+
+		cd_xls_path = Util.correctXlsFilename(cd_xls_path);
+
+		// Open FileOutputStream to write updates
+		FileOutputStream output_file = new FileOutputStream(new File(cd_xls_path));
+		// write changes
+		workbook.write(output_file);
+		// close the stream
+		output_file.close();
+		
 
 		
 		

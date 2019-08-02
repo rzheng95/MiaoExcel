@@ -1,4 +1,4 @@
-package com.rzheng.util;
+package com.rzheng.magnussen;
 
 public class Item {
 

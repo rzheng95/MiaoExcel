@@ -14,8 +14,8 @@ import com.rzheng.util.Util;
 public class ShippingInstructions {
 
 	public static void main(String[] args) {
-		ShippingInstructions si = new ShippingInstructions("052059 SI.pdf");
-		System.out.println(si.getCpoNumber());
+		ShippingInstructions si = new ShippingInstructions("052345 SI.pdf");
+		System.out.println(si.getBillOfLadingRequirement());
 	}
 
 	private String si_pdf_path;
@@ -321,11 +321,20 @@ public class ShippingInstructions {
 		int i = 0;
 
 		while (i < lines.length) {
-			if (lines[i].toUpperCase().contains(Constants.ISSUE) && lines[i].toUpperCase().contains(Constants.INVOICE.toUpperCase())
-					&& lines[i].toUpperCase().contains(",")) {
-				String[] arr = lines[i].split(",")[0].split(" ");
-				if(arr.length >= 2)
-					return arr[arr.length-2] + " " + arr[arr.length-1];
+			if (lines[i].toUpperCase().contains(Constants.ISSUE) && !lines[i].toUpperCase().contains(Constants.ISSUED)) {
+				System.out.println(lines[i]);
+				if (lines[i].contains(",")) {
+					String[] arr = lines[i].split(",");
+					if (arr != null && arr.length >= 1) {
+						int index = arr[0].indexOf(Constants.ISSUE);
+						return arr[0].substring(index + Constants.ISSUE.length()).trim();
+					}
+					
+				} else {
+					int index = lines[i].indexOf(Constants.ISSUE);
+					return lines[i].substring(index + Constants.ISSUE.length()).trim();
+				}
+				
 			}
 			i++;
 		}
