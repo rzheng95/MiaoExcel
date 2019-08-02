@@ -300,7 +300,7 @@ public class ShippingOrder {
 			error = "Success!";
 		}
 		
-		so_xls_path = Util.correctXlsFilename(so_xls_path);
+		so_xls_path = Util.correctFileFormat(".xls", so_xls_path);
 		// Open FileOutputStream to write updates
 		FileOutputStream output_file = new FileOutputStream(new File(so_xls_path));
 		// write changes

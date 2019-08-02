@@ -32,10 +32,10 @@ public class Main
 //		String cc_error = cc.run();
 //		System.out.println(cc_error);
 		
-//		CustomsClearanceModway cc = new CustomsClearanceModway("modway/9395/0009395-PI-MODWAY-041919(1).xls", 
-//				"modway/9395/0009395 HES19050515-海运提单(代理).PDF", "modway/9395/9395分货-有净毛体(1).xls", "modway/CI & PL Template.xlsx", "modway/cc_modway_test", "", "etd", "eta");
-//		
-//		System.out.println(cc.run());
+		CustomsClearanceModway cc = new CustomsClearanceModway("modway/9395/0009395-PI-MODWAY-041919(1).xls", 
+				"modway/9395/0009395 HES19050515-海运提单(代理).PDF", "modway/9395/9395分货-有净毛体(1).xls", "modway/Modway Customs Clearance Template.xls", "modway/cc_modway_test", "", "etd", "eta");
+		
+		System.out.println(cc.run());
 		
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -43,7 +43,7 @@ public class Main
 			@Override
 			public void run() {
 //				new Login();
-				new ShippingOrderGUI();
+//				new ShippingOrderGUI();
 //				new CustomsDeclarationGUI();
 //				new CustomsClearanceGUI();
 			}

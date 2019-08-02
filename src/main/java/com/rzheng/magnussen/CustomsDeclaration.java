@@ -255,7 +255,7 @@ public class CustomsDeclaration
 		// refreshes all formulas existed in the spreadsheet
 		HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
 
-		cd_xls_path = Util.correctXlsFilename(cd_xls_path);
+		cd_xls_path = Util.correctFileFormat(".xls", cd_xls_path);
 
 		// Open FileOutputStream to write updates
 		FileOutputStream output_file = new FileOutputStream(new File(cd_xls_path));

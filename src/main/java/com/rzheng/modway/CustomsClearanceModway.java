@@ -11,7 +11,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -47,9 +51,9 @@ public class CustomsClearanceModway
 	// Read the spreadsheet that needs to be updated
 	private FileInputStream fileInput;
 	// Access the workbook
-	private XSSFWorkbook workbook;
+	private Workbook workbook;
 	// Access the worksheet, so that we can update / modify it.
-	private XSSFSheet worksheet;
+	private Sheet worksheet;
 	// declare a Cell object
 	private Cell cell;
 	
@@ -80,21 +84,23 @@ public class CustomsClearanceModway
 	
 	public String run() throws IOException {
 		
-		try {
-			this.fileInput = new FileInputStream(new File(cc_template));
-		} catch (FileNotFoundException e) {
-			error = "ERROR: Customs Declaration Template Not Found!\n" + this.cc_template; 
-			e.printStackTrace();
-			return error;
-		}
+//		try {
+//			this.fileInput = new FileInputStream(new File(cc_template));
+//		} catch (FileNotFoundException e) {
+//			error = "ERROR: Customs Declaration Template Not Found!\n" + this.cc_template; 
+//			e.printStackTrace();
+//			return error;
+//		}
+//		
+//		try {
+//			this.workbook = new Workbook(fileInput);
+//		} catch (IOException e) {
+//			error = "ERROR: FileInputStream Exception";
+//			e.printStackTrace();
+//			return error;
+//		}
 		
-		try {
-			this.workbook = new XSSFWorkbook(fileInput);
-		} catch (IOException e) {
-			error = "ERROR: FileInputStream Exception";
-			e.printStackTrace();
-			return error;
-		}
+		this.workbook =  WorkbookFactory.create(new File(cc_template));
 		
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Date current_date = new Date();
@@ -195,7 +201,8 @@ public class CustomsClearanceModway
 
 		if (items != null && !items.isEmpty()) {
 			for (Item item : items) {
-
+				Util.copyRow(workbook, worksheet, this.item_row, this.item_row + 1);
+				worksheet.getRow(this.item_row + 1 ).setHeight(worksheet.getRow(this.item_row).getHeight());
 				// Style # (Part No.)
 				cell = worksheet.getRow(this.item_row).getCell(STYLE_NUMBER_COL);
 				cell.setCellValue(item.getPartNum());
@@ -240,9 +247,17 @@ public class CustomsClearanceModway
 				cell.setCellValue(item.getTotalAmount());
 				
 				this.item_row++;
+				
+				
+				
 				if (worksheet.getRow(this.item_row) == null)
 					worksheet.createRow(this.item_row);
+				
 			}
+			
+			// Removed default 2 empty rows
+			worksheet.removeRow(worksheet.getRow(this.item_row));
+			worksheet.removeRow(worksheet.getRow(this.item_row+1));
 		} else {
 			
 		}
@@ -255,9 +270,10 @@ public class CustomsClearanceModway
 			error = "Success!";
 
 			// refreshes all formulas existed in the spreadsheet
-			XSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
+//			XSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
+			HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
 
-			cc_xlsx_path = Util.correctXlsxFilename(cc_xlsx_path);
+			cc_xlsx_path = Util.correctFileFormat(".xls", cc_xlsx_path);
 
 			// Open FileOutputStream to write updates
 			FileOutputStream output_file;

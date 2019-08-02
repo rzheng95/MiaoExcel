@@ -466,7 +466,7 @@ public class CustomsClearance
 		// HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
 		XSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
 
-		cc_xlsx_path = Util.correctXlsxFilename(cc_xlsx_path);
+		cc_xlsx_path = Util.correctFileFormat(".xlsx", cc_xlsx_path);
 
 		// Open FileOutputStream to write updates
 		FileOutputStream output_file = new FileOutputStream(new File(cc_xlsx_path));
