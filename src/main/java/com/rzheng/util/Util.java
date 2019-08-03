@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -417,7 +419,23 @@ public final class Util {
 		}
 	}
 	
-	
+	public static XWPFTable findTableGivenText(List<XWPFTable> tables, String textInTable) {
+		for (XWPFTable tbl : tables) {
+			for (XWPFTableRow row : tbl.getRows()) {
+				for (XWPFTableCell cell : row.getTableCells()) {
+					for (XWPFParagraph p : cell.getParagraphs()) {
+						for (XWPFRun r : p.getRuns()) {
+							String text = r.getText(0);
+							if (text != null && text.equalsIgnoreCase(textInTable)) {
+								return tbl;
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
 	
 	
 	

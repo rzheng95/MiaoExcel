@@ -74,6 +74,15 @@ public final class Constants
 	public static final String PART_NO = "PART NO.";
 
 	
+	// Lacey Act Amendment
+	public static final String ENTRY_NUMBER_PLACEHOLDER = "ENTRY_NUMBER_PLACEHOLDER";
+	public static final String CONTAINER_NUMBER_PLACEHOLDER = "CONTAINER_NUMBER_PLACEHOLDER";
+	public static final String BILL_OF_LADING_PLACEHOLDER = "BILL_OF_LADING_PLACEHOLDER";
+	public static final String PO_NUMBER_PLACEHOLDER = "PO_NUMBER_PLACEHOLDER";
+	public static final String ETA_PLACEHOLDER = "ETA_PLACEHOLDER";
+	public static final String ENTERED_VALUE_PLACEHOLDER = "ENTERED_VALUE_PLACEHOLDER";
+	public static final String ARTICLE_PLACEHOLDER = "ARTICLE_PLACEHOLDER";
+	public static final String QUANTITY_OF_PLANT_MATERIAL_PLACEHOLDER = "ETA_PLACQUANTITY_OF_PLANT_MATERIAL_PLACEHOLDEREHOLDER";
 }
 
 

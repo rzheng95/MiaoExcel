@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.swing.SwingUtilities;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.xmlbeans.XmlException;
 
 import com.rzheng.gui.CustomsClearanceGUI;
 import com.rzheng.gui.CustomsClearanceModwayGUI;
@@ -13,11 +14,12 @@ import com.rzheng.gui.CustomsDeclarationGUI;
 import com.rzheng.gui.ShippingOrderGUI;
 import com.rzheng.magnussen.CustomsClearance;
 import com.rzheng.modway.CustomsClearanceModway;
+import com.rzheng.modway.LaceyActAmendment;
 import com.rzheng.util.Util;
 
 public class Main
 {
-	public static void main(String[] args) throws InvalidFormatException, IOException 
+	public static void main(String[] args) throws InvalidFormatException, IOException, XmlException 
 	{	
 		// 051490 X
 		// 052059
@@ -38,6 +40,8 @@ public class Main
 //		
 //		System.out.println(cc.run());
 		
+		LaceyActAmendment laa = new LaceyActAmendment("modway/8864/0008864-PI-MODWAY-121818.xls", "modway/8864/0008864 BL HES19010829-海运提单(代理).PDF", "modway/Lacey Act Template.docx", "modway/", "TEMP ETA 2222");
+		System.out.println(laa.run());
 		
 		SwingUtilities.invokeLater(new Runnable() {
 
@@ -47,7 +51,7 @@ public class Main
 //				new ShippingOrderGUI();
 //				new CustomsDeclarationGUI();
 //				new CustomsClearanceGUI();
-				new CustomsClearanceModwayGUI();
+//				new CustomsClearanceModwayGUI();
 			}
 			
 		});
