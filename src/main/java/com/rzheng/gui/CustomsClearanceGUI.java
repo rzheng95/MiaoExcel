@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 
 import com.rzheng.magnussen.CustomsClearance;
 
-public class CustomsClearanceGUI extends GUITemplate {
+public class CustomsClearanceGUI extends GUIMagnussenTemplate {
 	
 	private static final long serialVersionUID = 3014353196570362202L;
 	

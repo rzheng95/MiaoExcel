@@ -151,9 +151,14 @@ public class CustomsClearanceModway
 			cell.setCellValue(poNumber);
 			
 			
-			if (this.cc_xls_path.isEmpty()) {
-				this.cc_xls_path = poNumber + " CI & PL";
-			}
+			
+
+		if (cc_xls_path.trim().isEmpty()) {
+			this.cc_xls_path = poNumber + " CI & PL";
+        } else {
+        	this.cc_xls_path += "/"+poNumber + " CI & PL";
+        }
+			
 			
 			// Rename sheets
 			this.workbook.setSheetName(0, poNumber + " MASTER CI");

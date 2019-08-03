@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShippingOrderGUI extends GUITemplate {
+public class ShippingOrderGUI extends GUIMagnussenTemplate {
 
 	private static final long serialVersionUID = 223134307400367242L;
 

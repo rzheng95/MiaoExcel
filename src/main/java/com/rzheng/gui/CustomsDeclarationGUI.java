@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 
 import com.rzheng.magnussen.CustomsDeclaration;
 
-public class CustomsDeclarationGUI extends GUITemplate {
+public class CustomsDeclarationGUI extends GUIMagnussenTemplate {
 
 	private static final long serialVersionUID = -7643164752174547671L;
 

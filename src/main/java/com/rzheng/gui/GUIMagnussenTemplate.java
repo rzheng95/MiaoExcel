@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GUITemplate extends JFrame {
+public class GUIMagnussenTemplate extends JFrame {
 	
 	/**
 	 * 
@@ -68,7 +68,7 @@ public class GUITemplate extends JFrame {
 	protected int width = 880;
 	protected int height = 530;
 	
-	public GUITemplate() {
+	public GUIMagnussenTemplate() {
 // DEFAULT SETTINGS --------------------------------------------------------------------------------------------
 		super("Miao Excel");
 		try{UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}catch(Exception e){}
@@ -128,7 +128,7 @@ public class GUITemplate extends JFrame {
 				"Select Dimension Chart", "Excel Files", "OPEN", "xls", "xlsx"));
 		
 		// Shipping Order Template
-		label_shipping_order_template = GUIFactory.createLabel("*\u6258\u4e66\u6a21\u677f: (Shipping Order Template)", 10, 180, 250, 20);
+		label_shipping_order_template = GUIFactory.createLabel("*\u6258\u4e66\u6a21\u677f: (Shipping Order Template)", 10, 180, 350, 20);
 		add(label_shipping_order_template);
 
 		textField_shipping_order_template = GUIFactory.createTextField(10, 200, 800, 23);
