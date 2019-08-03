@@ -15,6 +15,7 @@ import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -26,6 +27,10 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import com.rzheng.modway.Item;
 
@@ -115,7 +120,7 @@ public final class Util {
 		return null;
 	}
 	
-	public static String readDoc(String doc_path) {
+	private static String readDoc(String doc_path) {
 		String text = null;
 		try {
 			File file = new File(doc_path);
@@ -134,7 +139,7 @@ public final class Util {
 		return text; 
 	}
 	
-	public static String readDocx(String docx_path) {
+	private static String readDocx(String docx_path) {
 		String text = null;
 		try {
 			File file = new File(docx_path);
@@ -367,6 +372,55 @@ public final class Util {
 		}
 		return null;
 	}
+	
+	public static void replaceDocxText(XWPFDocument doc, String findText, String replaceText) throws IOException {
+		replaceDocxTextInParagraphs(doc.getParagraphs(), findText, replaceText);
+		replaceDocxTextInTables(doc.getTables(), findText, replaceText);
+	}
+	
+	private static void replaceDocxTextInParagraphs(List<XWPFParagraph> paragraphs, String findText, String replaceText) throws IOException {
+
+		for (XWPFParagraph p : paragraphs) {
+		    List<XWPFRun> runs = p.getRuns();
+		    if (runs != null) {
+		        for (XWPFRun r : runs) {
+		            String text = r.getText(0);
+		            if (text != null && text.contains(findText)) {
+		                text = text.replace(findText, replaceText);
+		                r.setText(text, 0);
+		            }
+		        }
+		    }
+		}
+	}
+	
+	private static void replaceDocxTextInTables(List<XWPFTable> tables, String findText, String replaceText) throws IOException {
+
+		for (XWPFTable tbl : tables) {
+			for (XWPFTableRow row : tbl.getRows()) {
+				for (XWPFTableCell cell : row.getTableCells()) {
+					// tables within table
+					if (cell.getTables() != null) {
+						replaceDocxTextInTables(cell.getTables(), findText, replaceText);
+					}
+					for (XWPFParagraph p : cell.getParagraphs()) {
+						for (XWPFRun r : p.getRuns()) {
+							String text = r.getText(0);
+							if (text != null && text.contains(findText)) {
+								text = text.replace(findText, replaceText);
+								r.setText(text, 0);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	
 }
 
 
