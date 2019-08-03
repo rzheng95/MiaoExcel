@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -132,7 +133,8 @@ public final class GUIFactory {
 		}
 		return true;
 	}
-
+	private static Preferences prefs;
+	private static final String LAST_USED_FOLDER = "LAST_USED_FOLDER";
 	public static class OpenFileActionListener implements ActionListener {
 
 		private String title;
@@ -142,6 +144,8 @@ public final class GUIFactory {
 		private JFileChooser chooser;
 		private Component parent;
 		private JTextField textfield;
+	
+
 
 		public OpenFileActionListener(Component parent, JTextField textfield, String title, String description,
 				String mode, String... extentions) {
@@ -151,13 +155,14 @@ public final class GUIFactory {
 			this.extentions = extentions;
 			this.parent = parent;
 			this.textfield = textfield;
+			prefs = Preferences.userRoot().node(getClass().getName());
 			this.chooser = new JFileChooser();
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			chooser.setCurrentDirectory(new File("."));
-
+			chooser.setCurrentDirectory(new File(prefs.get(LAST_USED_FOLDER, new File(".").getAbsolutePath())));
+		
 			int response = -1;
 			chooser.setDialogTitle(title);
 			if (mode.equalsIgnoreCase("SAVE")) {
@@ -171,6 +176,7 @@ public final class GUIFactory {
 			}
 
 			if (response == JFileChooser.APPROVE_OPTION) {
+				prefs.put(LAST_USED_FOLDER, chooser.getSelectedFile().getParent());
 				File file = chooser.getSelectedFile();
 				textfield.setText(file.getPath());
 			}

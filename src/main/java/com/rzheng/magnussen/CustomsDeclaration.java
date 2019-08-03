@@ -11,6 +11,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -218,10 +220,12 @@ public class CustomsDeclaration
 		}
 
 //----- 报关单------------------------------------------------------------------
-		worksheet = workbook.getSheet(Constants.BAO_GUAN_DAN);
+		worksheet = workbook.getSheetAt(4);
 		// Recipient (First line of Consignee)
 		if (consignee != null) {
 			cell = worksheet.getRow(RECIPIENT_ROW).getCell(RECIPIENT_COL);
+			if (cell == null) 
+				JOptionPane.showMessageDialog(null, "YES");
 			cell.setCellValue(consignee.split("\\r?\\n")[0]);
 		}
 		
@@ -230,6 +234,8 @@ public class CustomsDeclaration
 		if (country != null) {
 			if (country.equalsIgnoreCase(Constants.SAUDI_ARABIA))
 				country = "沙特阿拉伯";
+			if (country.equalsIgnoreCase(Constants.SEOUL))
+				country = "韩国";
 			cell = worksheet.getRow(DESTINATION_COUNTRY_ROW).getCell(DESTINATION_COUNTRY_COL);
 			cell.setCellValue(country);
 		} else {

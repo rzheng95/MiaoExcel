@@ -182,14 +182,14 @@ public class GUIModwayTemplate extends JFrame {
 		add(textField_invoice_number);
 		
 		// ETD
-		label_etd = GUIFactory.createLabel("*ETD:", 10, 380, 200, 23);
+		label_etd = GUIFactory.createLabel("ETD:", 10, 380, 200, 23);
 		add(label_etd);
 		
 		textField_etd = GUIFactory.createTextField(10, 400, 200, 23);
 		add(textField_etd);
 		
 		// ETA
-		label_eta = GUIFactory.createLabel("*ETA:", 10, 430, 200, 23);
+		label_eta = GUIFactory.createLabel("ETA:", 10, 430, 200, 23);
 		add(label_eta);
 		
 		textField_eta = GUIFactory.createTextField(10, 450, 200, 23);
