@@ -40,7 +40,7 @@ public class Main
 //		
 //		System.out.println(cc.run());
 		
-		LaceyActAmendment laa = new LaceyActAmendment("modway/8864/0008864-PI-MODWAY-121818.xls", "modway/8864/0008864 BL HES19010829-海运提单(代理).PDF", "modway/Lacey Act Template.docx", "modway/", "TEMP ETA 2222");
+		LaceyActAmendment laa = new LaceyActAmendment("modway/9395/0009395-PI-MODWAY-041919(1).xls", "modway/9395/0009395 HES19050515-海运提单(代理).PDF", "modway/Lacey Act Template.docx", "modway/", "TEMP ETA 2222");
 		System.out.println(laa.run());
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -51,7 +51,7 @@ public class Main
 //				new ShippingOrderGUI();
 //				new CustomsDeclarationGUI();
 //				new CustomsClearanceGUI();
-//				new CustomsClearanceModwayGUI();
+				new CustomsClearanceModwayGUI();
 			}
 			
 		});

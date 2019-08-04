@@ -1,6 +1,7 @@
 package com.rzheng.gui;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -69,7 +70,9 @@ public class CustomsClearanceGUI extends GUIMagnussenTemplate {
 		label_invoice_number = GUIFactory.createLabel("*\u53d1\u7968\u53f7: (Invoice Number)", 10, 430, 250, 20);
 		add(label_invoice_number);
 		
+		Calendar calendar = Calendar.getInstance();
 		textField_invoice_number = GUIFactory.createTextField(10, 450, 200, 23);
+		textField_invoice_number.setText("INYB" + calendar.get(Calendar.YEAR) + "US");
 		add(textField_invoice_number);
 		requiredTextFields.add(textField_invoice_number);
 		

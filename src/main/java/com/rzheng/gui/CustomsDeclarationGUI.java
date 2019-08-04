@@ -1,6 +1,8 @@
 package com.rzheng.gui;
 
 import java.io.IOException;
+import java.util.Calendar;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,10 +22,12 @@ public class CustomsDeclarationGUI extends GUIMagnussenTemplate {
 		textField_shipping_order_template.setText("C:\\Users\\yibei\\Desktop\\程序\\表格模板\\Customs Declaration Template.xls");
 		label_shipping_order_template.setText("*\u6258\u4e66\u6a21\u677f: (Customs Declaration Template)");
 		
-		label_invoice_number = GUIFactory.createLabel("*PI Invoice Number:", 10, 380, 200, 23);
+		label_invoice_number = GUIFactory.createLabel("*\u53d1\u7968\u53f7: (Invoice Number)", 10, 380, 200, 23);
 		add(label_invoice_number);
 		
+		Calendar calendar = Calendar.getInstance();
 		textField_invoice_number = GUIFactory.createTextField(10, 400, 200, 23);
+		textField_invoice_number.setText("INYB" + calendar.get(Calendar.YEAR) + "US");
 		add(textField_invoice_number);
 		
 		button_generate.setText("Generate Customs Declaration");
