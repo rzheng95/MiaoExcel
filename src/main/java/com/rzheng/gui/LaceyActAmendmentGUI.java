@@ -119,11 +119,12 @@ public class LaceyActAmendmentGUI extends JFrame {
 				"Select Ocean Bill of Lading", "PDF Files", "OPEN", "pdf"));
 		
 		
-		// Product Dimension Chart
+		// Lacey Act Template
 		label_lacey_act_template = GUIFactory.createLabel("*Lacey Act \u6a21\u677f: (Lacey Act Template)", 10, 180, 400, 20);
 		add(label_lacey_act_template);
 
 		textField_lacey_act_template = GUIFactory.createTextField(10, 200, 800, 23);
+		textField_lacey_act_template.setText("C:\\Users\\yibei\\Desktop\\程序\\表格模板\\Lacey Act Template.docx");
 		add(textField_lacey_act_template);
 
 		button_lacey_act_template = GUIFactory.createButton("...", 820, 200, 30, 23);
