@@ -78,6 +78,14 @@ public final class GUIFactory {
 			}
 		});
 		
+		JMenuItem menuItem_laceyAct = new JMenuItem("Lacey Act Amendment");
+		menuItem_laceyAct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				new LaceyActAmendmentGUI().setVisible(true);
+			}
+		});
+		
 
 //		JMenuItem menuItem_exit = new JMenuItem("Exit");
 //		menuItem_exit.addActionListener(new ActionListener() {
@@ -101,6 +109,7 @@ public final class GUIFactory {
 		});
 		
 		mnModway.add(menuItem_customsClearanceModway);
+		mnModway.add(menuItem_laceyAct);
 		
 
 		JMenu mnAbout = new JMenu("About");

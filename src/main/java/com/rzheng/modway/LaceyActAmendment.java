@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -42,6 +45,10 @@ public class LaceyActAmendment {
 		FileInputStream input = new FileInputStream(new File(lacey_act_template));
 		XWPFDocument doc = new XWPFDocument(input);
 		
+		
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        Date current_date = new Date();
+
 		// ETA
 		Util.replaceDocxText(doc, Constants.ETA_PLACEHOLDER, this.eta);
 	
@@ -74,7 +81,10 @@ public class LaceyActAmendment {
 			Util.replaceDocxText(doc, Constants.PO_NUMBER_PLACEHOLDER, poNum);
 			Util.replaceDocxText(doc, Constants.ENTRY_NUMBER_PLACEHOLDER, poNum);
 			
-			output_address += "LACEY_ACT-官版  -" + poNum;
+			if (output_address.isEmpty())
+				output_address = "LACEY_ACT-官版  -" + poNum;
+			else
+				output_address += "/LACEY_ACT-官版  -" + poNum;
 	
 		} else {
 			error += "ERROR: PO # not found.\n" + 
@@ -121,6 +131,11 @@ public class LaceyActAmendment {
 					"错误： 找不到任何产品在PI里.\n";
 		}
 		
+		// Signature Date
+		String date = dateFormat.format(current_date);
+		if (date != null) {
+			Util.replaceDocxText(doc, Constants.DATE_PLACEHOLDER, date);
+		}
 		
 		
 		if (error.isEmpty()) {
@@ -129,9 +144,11 @@ public class LaceyActAmendment {
 		
 		
 		output_address = Util.correctFileFormat(".docx", output_address);
-		doc.write(new FileOutputStream(output_address));
+		FileOutputStream output_file = new FileOutputStream(output_address);
+		doc.write(output_file);
 		doc.close();
-		
+		output_file.close();
+		input.close();
 		return this.error;
 	}
 }

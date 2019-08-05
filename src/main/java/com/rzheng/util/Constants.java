@@ -80,6 +80,7 @@ public final class Constants
 	public static final String BILL_OF_LADING_PLACEHOLDER = "BILL_OF_LADING_PLACEHOLDER";
 	public static final String PO_NUMBER_PLACEHOLDER = "PO_NUMBER_PLACEHOLDER";
 	public static final String ETA_PLACEHOLDER = "ETA_PLACEHOLDER";
+	public static final String DATE_PLACEHOLDER = "DATE_PLACEHOLDER";
 }
 
 
