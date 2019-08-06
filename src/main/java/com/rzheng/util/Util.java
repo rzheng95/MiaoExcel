@@ -437,7 +437,15 @@ public final class Util {
 		return null;
 	}
 	
-	
+	public static String translateCountry(String country) {
+		if (country.equalsIgnoreCase(Constants.SAUDI_ARABIA))
+			return "沙特阿拉伯";
+		if (country.equalsIgnoreCase(Constants.SEOUL))
+			return "韩国";
+		if (country.equalsIgnoreCase(Constants.US) || country.equalsIgnoreCase(Constants.USA))
+			return "美国";
+		return country;
+	}
 	
 }
 

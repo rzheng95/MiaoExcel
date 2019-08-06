@@ -232,10 +232,7 @@ public class CustomsDeclaration
 		// Country 贸易国/运抵国
 		String country = si.getDestinationCountry();
 		if (country != null) {
-			if (country.equalsIgnoreCase(Constants.SAUDI_ARABIA))
-				country = "沙特阿拉伯";
-			if (country.equalsIgnoreCase(Constants.SEOUL))
-				country = "韩国";
+				country = Util.translateCountry(country);
 			cell = worksheet.getRow(DESTINATION_COUNTRY_ROW).getCell(DESTINATION_COUNTRY_COL);
 			cell.setCellValue(country);
 		} else {

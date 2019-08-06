@@ -42,8 +42,11 @@ public final class Constants
 	public static final String TOTAL_EXCL_TAX = "TOTAL EXCL. TAX";
 	public static final String PI_PO = "P.O.NO.";
 	
+	// Countries
 	public static final String SAUDI_ARABIA = "SAUDI ARABIA";
 	public static final String SEOUL = "SEOUL";
+	public static final String US = "US";
+	public static final String USA = "USA";
 	
 	// PI stats
 	public static final int TOTAL_QUANTITY_INDEX = 0;
@@ -81,6 +84,7 @@ public final class Constants
 	public static final String PO_NUMBER_PLACEHOLDER = "PO_NUMBER_PLACEHOLDER";
 	public static final String ETA_PLACEHOLDER = "ETA_PLACEHOLDER";
 	public static final String DATE_PLACEHOLDER = "DATE_PLACEHOLDER";
+
 }
 
 
