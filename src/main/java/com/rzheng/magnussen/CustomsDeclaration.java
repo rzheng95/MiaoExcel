@@ -241,11 +241,15 @@ public class CustomsDeclaration
 		}
         
         
-		if (cd_xls_path.trim().isEmpty()) {
-			String[] poNum = si.getPoNumber().split(" ");
-			if (poNum != null && poNum.length >= 3)
+
+		String[] poNum = si.getPoNumber().split(" ");
+		if (poNum != null && poNum.length >= 3) {
+			if (cd_xls_path.isEmpty())
 				cd_xls_path = invoiceNumber + " SOFA " + poNum[2] ; // + PO
-        }
+			else
+				cd_xls_path += "/" + invoiceNumber + " SOFA " + poNum[2] ; // + PO
+		}
+         
 		
 		
 		// Close the InputStream
