@@ -305,6 +305,7 @@ public class ShippingOrder {
 		FileOutputStream output_file = new FileOutputStream(new File(so_xls_path));
 		// write changes
 		wb.write(output_file);
+		wb.close();
 		// close the stream
 		output_file.close();
 		

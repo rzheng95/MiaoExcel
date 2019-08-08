@@ -16,7 +16,9 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class ProductDimensionChart {
 	public static void main(String[] args) {
-		ProductDimensionChart pdc = new ProductDimensionChart("modway/9395/9395分货-有净毛体(1).xls");
+		ProductDimensionChart pdc = new ProductDimensionChart("modway/9634/9634分货-含净毛体.xls");
+		
+	
 	}
 	
 	private String product_dimension_chart_path;

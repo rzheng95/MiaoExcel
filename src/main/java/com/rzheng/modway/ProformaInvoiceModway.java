@@ -19,8 +19,11 @@ import com.rzheng.util.Constants;
 
 public class ProformaInvoiceModway {
 	public static void main(String[] args) throws IOException {
-		ProformaInvoiceModway pi = new ProformaInvoiceModway("modway/9395/0009395-PI-MODWAY-041919(1).xls");
-		System.out.println(pi.getContainerQty());
+
+		ProformaInvoiceModway pi = new ProformaInvoiceModway("modway/8864/0008864-PI-MODWAY-121818.xls");
+
+		System.out.println(pi.getPortName());
+
 	}
 	
 	private String pi_path;
@@ -150,8 +153,83 @@ public class ProformaInvoiceModway {
 		return null;
 	}
 	
+	public double getTotalAmount() {
+
+		double totalAmount = 0;
+
+		for (Item item : getItems()) {
+			totalAmount += item.getTotalAmount();
+		}
+		
+		return totalAmount;
+	}
+	
+	public int getTotalQuantity() {
+
+		int totalQuantity = 0;
+		
+		for (Item item : getItems()) {
+			totalQuantity += item.getQuantity();
+		}
+	
+		return totalQuantity;
+	}
+	
+	public String getShipTo() {
+		
+		String shipTo = "";
+		boolean found = false;
+		if (worksheet != null)
+			for (Row row : worksheet) {
+				
+		
+				Cell cell = row.getCell(0);
+				if (cell != null && cell.getCellType() == CellType.STRING) {
+					
+					if (cell.getRichStringCellValue().getString().trim().equalsIgnoreCase(Constants.SHIP_TO)) {
+						found = true;
+					}
+					
+					
+					
+					if (found) {
+						if (cell.getRichStringCellValue().getString().trim().equalsIgnoreCase(Constants.SHIP_VIA)) {
+							return shipTo;
+						}
+					}
+				}
+				
+				if (found) {
+					shipTo += row.getCell(1).toString() + "\n";
+				}
+				
+			}
+
+		return null;
+	}
+	
+	
+	public String getPortName() {
+		String shipTo = getShipTo();
+		
+		if (shipTo != null) {
+			String[] arr = shipTo.split("\\r?\\n");
+			
+			if (arr != null && arr.length >= 2) {
+				String portLine = arr[arr.length-2];
+				if (portLine != null && portLine.contains(",")) {
+					arr = portLine.split(",");
+					if (arr != null && arr.length >= 1)
+						return arr[0].trim();
+				}
+			}
+		}
+		
+		return null;
+	}
 	
 }
+
 
 
 

@@ -11,10 +11,12 @@ import org.apache.xmlbeans.XmlException;
 import com.rzheng.gui.CustomsClearanceGUI;
 import com.rzheng.gui.CustomsClearanceModwayGUI;
 import com.rzheng.gui.CustomsDeclarationGUI;
+import com.rzheng.gui.CustomsDeclarationModwayGUI;
 import com.rzheng.gui.LaceyActAmendmentGUI;
 import com.rzheng.gui.ShippingOrderGUI;
 import com.rzheng.magnussen.CustomsClearance;
 import com.rzheng.modway.CustomsClearanceModway;
+import com.rzheng.modway.CustomsDeclarationModway;
 import com.rzheng.modway.LaceyActAmendment;
 import com.rzheng.util.Util;
 
@@ -44,6 +46,10 @@ public class Main
 //		LaceyActAmendment laa = new LaceyActAmendment("modway/9395/0009395-PI-MODWAY-041919(1).xls", "modway/9395/0009395 HES19050515-海运提单(代理).PDF", "modway/Lacey Act Template.docx", "modway/", "TEMP ETA !!1");
 //		System.out.println(laa.run());
 		
+//		CustomsDeclarationModway cdm = new CustomsDeclarationModway("modway/9634/0009634-PI-MODWAY-060619.xls", "modway/9634/9634分货-含净毛体.xls", "modway/Modway Customs Declaration Template.xls", 
+//				"modway/", "test Number");
+//		System.out.println(cdm.run());
+		
 		
 		SwingUtilities.invokeLater(new Runnable() {
 
@@ -54,7 +60,8 @@ public class Main
 //				new CustomsDeclarationGUI();
 //				new CustomsClearanceGUI();
 //				new CustomsClearanceModwayGUI();
-				new LaceyActAmendmentGUI();
+//				new LaceyActAmendmentGUI();
+				new CustomsDeclarationModwayGUI();
 			}
 			
 		});

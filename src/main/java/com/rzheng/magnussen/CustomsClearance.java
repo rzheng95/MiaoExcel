@@ -472,6 +472,7 @@ public class CustomsClearance
 		FileOutputStream output_file = new FileOutputStream(new File(cc_xlsx_path));
 		// write changes
 		workbook.write(output_file);
+		workbook.close();
 		// close the stream
 		output_file.close();
 		

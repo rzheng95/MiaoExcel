@@ -75,6 +75,8 @@ public final class Constants
 	public static final String CONTAINER_NO = "CONTAINER NO.:";
 	public static final String PURCHASE_ORDER_NO = "Purchase Order No.:";
 	public static final String PART_NO = "PART NO.";
+	public static final String SHIP_TO = "SHIP TO:";
+	public static final String SHIP_VIA = "SHIP VIA:";
 
 	
 	// Lacey Act Amendment

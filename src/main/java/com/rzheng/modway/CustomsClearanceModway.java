@@ -62,8 +62,8 @@ public class CustomsClearanceModway
 	
 	private String error;
 	private String pi_path;
-	private String oceanBillOfLading_path;
 	private String product_dimension_chart_path;
+	private String oceanBillOfLading_path;
 	private String cc_template;
 	private String cc_xls_path;
 	private String invoiceNumber;
@@ -79,8 +79,9 @@ public class CustomsClearanceModway
 		this.cc_template = cc_template;
 		this.cc_xls_path = cc_xls_path;
 		this.invoiceNumber = invoiceNumber;
-		this.etd = etd;
 		this.eta = eta;
+		this.etd = etd;
+
 	}
 	
 	
@@ -455,12 +456,14 @@ public class CustomsClearanceModway
 			output_file = new FileOutputStream(new File(cc_xls_path));
 			// write changes
 			workbook.write(output_file);
+
 			// close the stream
 			output_file.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		workbook.close();
 		
 		return error;
 	}

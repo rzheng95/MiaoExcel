@@ -268,6 +268,7 @@ public class CustomsDeclaration
 		FileOutputStream output_file = new FileOutputStream(new File(cd_xls_path));
 		// write changes
 		workbook.write(output_file);
+		workbook.close();
 		// close the stream
 		output_file.close();
 		
