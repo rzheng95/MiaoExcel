@@ -86,6 +86,14 @@ public final class GUIFactory {
 			}
 		});
 		
+		JMenuItem menuItem_customsDeclarationModway = new JMenuItem("Customs Declaration");
+		menuItem_customsDeclarationModway.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				new CustomsDeclarationModwayGUI().setVisible(true);
+			}
+		});
+		
 
 //		JMenuItem menuItem_exit = new JMenuItem("Exit");
 //		menuItem_exit.addActionListener(new ActionListener() {
@@ -108,6 +116,7 @@ public final class GUIFactory {
 			}
 		});
 		
+		mnModway.add(menuItem_customsDeclarationModway);
 		mnModway.add(menuItem_customsClearanceModway);
 		mnModway.add(menuItem_laceyAct);
 		

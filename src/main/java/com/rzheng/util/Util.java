@@ -55,7 +55,8 @@ public final class Util {
 			line.contains(Constants.SELECTION_CRITERIA) ||
 			line.contains(Constants.FORWARDER) ||
 			line.contains(Constants.CARRIER) ||
-			line.contains(Constants.CONTAINER_SIZE));
+			line.contains(Constants.CONTAINER_SIZE) ||
+			line.contains(Constants.PRINTED_ON));
 			
 	}
 	

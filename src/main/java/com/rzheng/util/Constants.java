@@ -16,6 +16,8 @@ public final class Constants
 	public static final String CARRIER = "CARRIER:";
 	public static final String BACKUP_CARRIER = "BACKUP CARRIER:";
 	public static final String CONTAINER_SIZE = "CONTAINER SIZE:";
+	public static final String PRINTED_ON = "PRINTED ON";
+
 	
 	
 	public static final String PO = "PO #";
@@ -86,6 +88,7 @@ public final class Constants
 	public static final String PO_NUMBER_PLACEHOLDER = "PO_NUMBER_PLACEHOLDER";
 	public static final String ETA_PLACEHOLDER = "ETA_PLACEHOLDER";
 	public static final String DATE_PLACEHOLDER = "DATE_PLACEHOLDER";
+
 
 }
 

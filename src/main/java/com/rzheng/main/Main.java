@@ -15,6 +15,7 @@ import com.rzheng.gui.CustomsDeclarationModwayGUI;
 import com.rzheng.gui.LaceyActAmendmentGUI;
 import com.rzheng.gui.ShippingOrderGUI;
 import com.rzheng.magnussen.CustomsClearance;
+import com.rzheng.magnussen.ShippingOrder;
 import com.rzheng.modway.CustomsClearanceModway;
 import com.rzheng.modway.CustomsDeclarationModway;
 import com.rzheng.modway.LaceyActAmendment;
@@ -30,8 +31,8 @@ public class Main
 		// 051487 X
 		// 051338 
 		// 051336
-//		String so_error = new ShippingOrder().run("052059 SI.pdf", "052059 PI.pdf", "", "Shipping Order Template.xls");
-//		System.out.println(so_error);
+//		ShippingOrder so = new ShippingOrder("magnussen/magnussen 产品对照表 201905025.xlsx", "magnussen/净毛体统计2016.09.07.xls", "magnussen/052372 SI.pdf", "magnussen/052372 PI.pdf", "", "magnussen/Shipping Order Template.xls");
+//		System.out.println(so.run());
 
 //		CustomsClearance cc = new CustomsClearance("magnussen 产品对照表 201905025.xlsx", "净毛体统计2016.09.07(1).xls", "052059 SI.pdf", "052059 PI.pdf", 
 //				"Unitex Logistics", "指代/Unitex Logistics Ltd 051490.docx", "cc_test", "Customs Clearance Template.xlsx", "invoice number", "container number", "seal number");
@@ -56,12 +57,12 @@ public class Main
 			@Override
 			public void run() {
 //				new Login();
-//				new ShippingOrderGUI();
+				new ShippingOrderGUI();
 //				new CustomsDeclarationGUI();
 //				new CustomsClearanceGUI();
 //				new CustomsClearanceModwayGUI();
 //				new LaceyActAmendmentGUI();
-				new CustomsDeclarationModwayGUI();
+//				new CustomsDeclarationModwayGUI();
 			}
 			
 		});
