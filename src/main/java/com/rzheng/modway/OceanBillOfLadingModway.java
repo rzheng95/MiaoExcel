@@ -7,8 +7,13 @@ import com.rzheng.util.Util;
 
 public class OceanBillOfLadingModway {
 	public static void main(String[] args) {
-		OceanBillOfLadingModway obl = new OceanBillOfLadingModway("modway/9395/0009395 HES19050515-海运提单(代理).PDF");
-		System.out.println(obl.getContainerNumber(58, 2829.8, 71.44));
+		// modway/8864/0008864 BL HES19010829-海运提单(代理).PDF
+		// modway/9563/HES19070264-海运提单(代理).PDF
+		OceanBillOfLadingModway obl = new OceanBillOfLadingModway("modway/9563/HES19070264-海运提单(代理).PDF");
+		List<String> list = obl.getContainerDescriptions();
+		for (String s : list) {
+			System.out.println(s);
+		}
 //		System.out.println(Util.readPDF(("modway/9395/0009395 HES19050515-海运提单(代理).PDF")));
 	}
 	
@@ -30,8 +35,14 @@ public class OceanBillOfLadingModway {
 			List<String> list = new ArrayList<>();
 			while (i < lines.length) {
 
-				if (Util.countString(lines[i], "/", 5))
-					list.add(lines[i].trim());
+				if (Util.countString(lines[i], "/", 5)) {
+					String line = lines[i].trim().replaceAll(" +", " ");
+					String[] arr = line.split(" ");
+					if (arr != null && arr.length >= 2) {
+						line = arr[0];
+					} 
+					list.add(line);
+				}
 
 				i++;
 			}
@@ -57,6 +68,7 @@ public class OceanBillOfLadingModway {
 	
 	public String getContainerNumber(int carton, double grossWeight, double cbm) {
 		List<String> containerDescriptions = this.getContainerDescriptions();
+		
 		if (containerDescriptions != null) {
 			for (String des : containerDescriptions) {
 				String[] arr = des.split("/");

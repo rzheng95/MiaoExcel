@@ -69,8 +69,9 @@ public class CustomsDeclaration
 	private String cd_xls_path;
 	private String cd_template;
 	private String invoiceNumber;
+	private String invoiceDate;
 
-	public CustomsDeclaration(String product_file_path, String dimension_file_path, String si_pdf_path, String pi_pdf_path, String cd_xls_path, String cd_template, String invoiceNumber) throws IOException
+	public CustomsDeclaration(String product_file_path, String dimension_file_path, String si_pdf_path, String pi_pdf_path, String cd_xls_path, String cd_template, String invoiceNumber, String invoiceDate) throws IOException
 	{
 		this.error = "";
 		this.product_file_path = product_file_path;
@@ -78,8 +79,9 @@ public class CustomsDeclaration
 		this.si_pdf_path = si_pdf_path;
 		this.pi_pdf_path = pi_pdf_path;
 		this.cd_xls_path = cd_xls_path;
-		this.invoiceNumber = invoiceNumber;
 		this.cd_template = cd_template;
+		this.invoiceNumber = invoiceNumber;
+		this.invoiceDate = invoiceDate;
 	}
 	
 	public String run() throws IOException
@@ -111,7 +113,7 @@ public class CustomsDeclaration
         
         Date two_months_ago = calendar.getTime();
         
-        String invoice_date = dateFormat.format(current_date);
+//        String invoice_date = dateFormat.format(current_date);
         String contract_date = dateFormat.format(two_months_ago);
         
 
@@ -164,7 +166,7 @@ public class CustomsDeclaration
         
         // Invoice Date
         cell = worksheet.getRow(INVOICE_DATE_ROW).getCell(INVOICE_DATE_COL);
-		cell.setCellValue(invoice_date);
+		cell.setCellValue(this.invoiceDate);
 		
 		// Consignee	
 		String consignee = si.getConsignee();

@@ -61,14 +61,16 @@ public class CustomsDeclarationModway {
 	private String cd_xls_path;
 	private String cd_template;
 	private String invoiceNumber;
+	private String invoiceDate;
 	
-	public CustomsDeclarationModway(String pi_pdf_path, String product_dimension_path, String cd_template, String cd_xls_path, String invoiceNumber) {
+	public CustomsDeclarationModway(String pi_pdf_path, String product_dimension_path, String cd_template, String cd_xls_path, String invoiceNumber, String invoiceDate) {
 		this.error = "";
 		this.pi_pdf_path = pi_pdf_path;
 		this.product_dimension_path = product_dimension_path;
 		this.cd_xls_path = cd_xls_path;
 		this.cd_template = cd_template;
 		this.invoiceNumber = invoiceNumber;
+		this.invoiceDate = invoiceDate;
 	}
 	
 	
@@ -152,7 +154,7 @@ public class CustomsDeclarationModway {
         
         // Invoice Date
         cell = worksheet.getRow(INVOICE_DATE_ROW).getCell(INVOICE_DATE_COL);
-		cell.setCellValue(invoice_date);
+		cell.setCellValue(this.invoiceDate);
         
 		// PO #
 		String poNumber = pi.getPoNumber();

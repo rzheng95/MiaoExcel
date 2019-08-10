@@ -49,6 +49,10 @@ public class CustomsDeclarationModwayGUI extends JFrame {
 	private JLabel label_invoice_number;
 	private JTextField textField_invoice_number;
 	
+	// Invoice Date
+	private JLabel label_invoice_date;
+	private JTextField textField_invoice_date;
+	
 	
 	private static final long serialVersionUID = 8701914961303690880L;
 
@@ -146,13 +150,22 @@ public class CustomsDeclarationModwayGUI extends JFrame {
 		
 		Calendar calendar = Calendar.getInstance();
 		
-		// 发票号 (Invoice Number)
+		// Invoice Number
 		label_invoice_number = GUIFactory.createLabel("*\u53d1\u7968\u53f7: (Invoice Number)", 10, 280, 200, 23);
 		add(label_invoice_number);
 		
 		textField_invoice_number = GUIFactory.createTextField(10, 300, 200, 23);
 		textField_invoice_number.setText("INYB" + calendar.get(Calendar.YEAR) + "US");
 		add(textField_invoice_number);
+		
+		// Invoice Date
+		label_invoice_date = GUIFactory.createLabel("\u53d1\u7968\u65e5\u671f: (Invoice Date)", 10, 330, 200, 23);
+		add(label_invoice_date);
+		
+		textField_invoice_date = GUIFactory.createTextField(10, 350, 200, 23);
+		textField_invoice_date.setText(calendar.get(Calendar.YEAR) + "-");
+		add(textField_invoice_date);
+		
 		
 		requiredTextFields.add(textField_proforma_invoice);
 		requiredTextFields.add(textField_product_dimension_chart);
@@ -184,7 +197,8 @@ public class CustomsDeclarationModwayGUI extends JFrame {
 					textField_product_dimension_chart.getText(), 
 					textField_cd_template.getText(),
 					textField_output_directory.getText(), 
-					textField_invoice_number.getText());
+					textField_invoice_number.getText(),
+					textField_invoice_date.getText());
 
 			JOptionPane.showMessageDialog(null, cd.run());
 		} catch (IOException e1) {
