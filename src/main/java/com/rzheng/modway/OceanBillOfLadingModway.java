@@ -9,7 +9,7 @@ public class OceanBillOfLadingModway {
 	public static void main(String[] args) {
 		// modway/8864/0008864 BL HES19010829-海运提单(代理).PDF
 		// modway/9563/HES19070264-海运提单(代理).PDF
-		OceanBillOfLadingModway obl = new OceanBillOfLadingModway("modway/9563/HES19070264-海运提单(代理).PDF");
+		OceanBillOfLadingModway obl = new OceanBillOfLadingModway("modway/9651/HES19070266-海运提单(代理).PDF");
 		List<String> list = obl.getContainerDescriptions();
 		for (String s : list) {
 			System.out.println(s);
@@ -46,6 +46,7 @@ public class OceanBillOfLadingModway {
 
 				i++;
 			}
+
 			return list;
 		}
 		return null;
@@ -69,12 +70,19 @@ public class OceanBillOfLadingModway {
 	public String getContainerNumber(int carton, double grossWeight, double cbm) {
 		List<String> containerDescriptions = this.getContainerDescriptions();
 		
+		
+		
 		if (containerDescriptions != null) {
 			for (String des : containerDescriptions) {
 				String[] arr = des.split("/");
 				if (arr != null && arr.length == 6) {
 					int indexOfCarton = arr[3].indexOf("CARTONS");
-					int carton2 = Integer.parseInt(arr[3].substring(0, indexOfCarton));
+					int carton2 = -1;
+					if (indexOfCarton != -1) {
+						carton2 = Integer.parseInt(arr[3].substring(0, indexOfCarton).trim());
+					} else {
+						carton2 = Integer.parseInt(arr[3].trim());
+					}
 					
 					int indexOfKgs = arr[4].indexOf("KGS");
 					double grossWeight2 = Double.parseDouble(arr[4].substring(0, indexOfKgs));
