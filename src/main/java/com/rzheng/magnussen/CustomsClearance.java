@@ -397,7 +397,8 @@ public class CustomsClearance
 				cell.setCellValue(item.getDescription());
 
 				cell = worksheet.getRow(item_start_row).getCell(HTS_CODE_COL);
-				cell.setCellValue(Double.parseDouble(item.getHtsCode()));
+//				cell.setCellValue(Double.parseDouble(item.getHtsCode()));
+				cell.setCellValue(item.getHtsCode());
 
 				String countryOfOrigin = si.getPortOfLoadingCountry();
 				if (countryOfOrigin != null) {
@@ -430,9 +431,12 @@ public class CustomsClearance
 						cell.setCellValue(stats[3]);
 					} else {
 						if (stats[stats.length-1] == -1)
-							error += "ERROR: Item Number not found.\n";
+							error += "ERROR: Item Number not found.\n"
+									+ "错误： 找不到客户型号。\n";
 						if (stats[stats.length-1] == -2)
-							error += "ERROR: Model Number not found.\n";
+							error += "ERROR: Model Number not found.\n"
+									+ "错误： 找不到艺贝型号。\n"
+									+ "或请检查中文品名是否在产品对照表和净毛体统计表里相同。宝宝猪来噶！\n";
 					}
 				}
 
@@ -445,11 +449,16 @@ public class CustomsClearance
 		
     
         
-		if (cc_xlsx_path.trim().isEmpty()) {
-			String[] poNum = si.getPoNumber().split(" ");
-			if (poNum != null && poNum.length >= 3)
+		
+		String[] poNum = si.getPoNumber().split(" ");
+		if (poNum != null && poNum.length >= 3) {
+			if (cc_xlsx_path.trim().isEmpty()) {
 				cc_xlsx_path = "Magnussen CI&PL&7 Point " + poNum[2]; // + PO
-        }
+			} else {
+				cc_xlsx_path += "/Magnussen CI&PL&7 Point " + poNum[2];
+			}
+		}
+        
 		
 		
 		// Close the InputStream

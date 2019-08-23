@@ -12,9 +12,9 @@ import com.rzheng.util.Util;
 
 public class ProformaInvoice {
 	public static void main(String[] args) {
-		ProformaInvoice pi = new ProformaInvoice("magnussen/magnussen 产品对照表 201905025.xlsx", "magnussen/净毛体统计2016.09.07.xls", "magnussen/049198/049198 PI.pdf");
+		ProformaInvoice pi = new ProformaInvoice("magnussen/magnussen 产品对照表 201905025.xlsx", "magnussen/净毛体统计2016.09.07.xls", "magnussen/49325/049325 PI.pdf");
 		for (Item i : pi.getItems()) {
-			System.out.println(i.getDescription());
+			//System.out.println(i.getDescription());
 		}
 	}
 
@@ -55,6 +55,7 @@ public class ProformaInvoice {
 
 			// U3446-20- Silver Sofa KD / KD sofa argent 9401.61 67.80 24 $314.00 $7,536.00
 			if (Util.countString(lines[i], "$", 2) && Util.countString(lines[i], "-", 2)) {
+				System.out.println(lines[i]);
 				
 				List<String> cols = Arrays.asList(lines[i].split(" "));
 				cols = new ArrayList<>(cols);
@@ -79,6 +80,7 @@ public class ProformaInvoice {
 					}
 				}
 				
+			
 				items.add(new Item(cols.get(0), 
 						"", 
 						description, 

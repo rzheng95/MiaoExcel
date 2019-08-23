@@ -230,6 +230,9 @@ public final class Util {
 		boolean found = false;
 
 		for (Sheet sheet : wb) {
+			
+			if (sheet.getSheetName().equals("目录"))
+				continue;
 
 			for (Row row : sheet) {
 				
@@ -248,15 +251,28 @@ public final class Util {
 				// found
 				else {
 
-					int quantityCol = 7;
-					int netWeightCol = 8;
-					int grossWeightCol = 9;
-					int volumeCol = 10;
-					// NEED TO CHECK WHEN TO STOP
-					// NEED TO CHECK WHEN TO STOP
-					// NEED TO CHECK WHEN TO STOP
+					System.out.println(row.getRowNum());
+					if (row.getCell(0) != null) {
+						System.out.println(row.getCell(0).getCellType());
+						
+						if (row.getCell(0).getCellType() == CellType.STRING)
+							System.out.println(row.getCell(0).getRichStringCellValue().getString());
+					}
+					else {
+						System.out.println("NULL cell");
+					}
+					
 					if (row.getCell(0) != null && row.getCell(0).getCellType() == CellType.STRING) {
+						// End of item / beginning of next item
+						if (row.getCell(0).getRichStringCellValue().getString().trim().substring(0, 2).equalsIgnoreCase("YB")) {
+							return null;
+						}
+						
 						if (row.getCell(0).getRichStringCellValue().getString().trim().equals(type)) {
+							int quantityCol = 7;
+							int netWeightCol = 8;
+							int grossWeightCol = 9;
+							int volumeCol = 10;
 							
 							row.getCell(quantityCol).setCellValue(quantity);
 							
