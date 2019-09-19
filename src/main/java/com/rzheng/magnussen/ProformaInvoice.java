@@ -12,9 +12,11 @@ import com.rzheng.util.Util;
 
 public class ProformaInvoice {
 	public static void main(String[] args) {
-		ProformaInvoice pi = new ProformaInvoice("magnussen/magnussen 产品对照表 201905025.xlsx", "magnussen/净毛体统计2016.09.07.xls", "magnussen/49325/049325 PI.pdf");
-		for (Item i : pi.getItems()) {
-			//System.out.println(i.getDescription());
+		ProformaInvoice pi = new ProformaInvoice("magnussen/magnussen 产品对照表 201905025.xlsx", "magnussen/净毛体统计2016.09.07.xls", "magnussen/052372/052372 PI.pdf");
+	
+		
+		for (Object obj : pi.getTotalStats(pi.getItems())) {
+			System.out.println(obj);
 		}
 	}
 

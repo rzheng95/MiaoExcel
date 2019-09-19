@@ -240,7 +240,8 @@ public final class Util {
 					for (Cell cell : row) {
 
 						if (cell.getCellType() == CellType.STRING) {
-							if (cell.getRichStringCellValue().getString().trim().equals(modelNumber)) {
+							String modelNum = cell.getRichStringCellValue().getString().trim();
+							if (modelNum != null && modelNum.length() >= 6 && modelNum.substring(0, 6).equals(modelNumber)) {
 								found = true;
 								break;
 							}
@@ -251,16 +252,16 @@ public final class Util {
 				// found
 				else {
 
-					System.out.println(row.getRowNum());
-					if (row.getCell(0) != null) {
-						System.out.println(row.getCell(0).getCellType());
-						
-						if (row.getCell(0).getCellType() == CellType.STRING)
-							System.out.println(row.getCell(0).getRichStringCellValue().getString());
-					}
-					else {
-						System.out.println("NULL cell");
-					}
+//					System.out.println(row.getRowNum());
+//					if (row.getCell(0) != null) {
+//						System.out.println(row.getCell(0).getCellType());
+//						
+//						if (row.getCell(0).getCellType() == CellType.STRING)
+//							System.out.println(row.getCell(0).getRichStringCellValue().getString());
+//					}
+//					else {
+//						System.out.println("NULL cell");
+//					}
 					
 					if (row.getCell(0) != null && row.getCell(0).getCellType() == CellType.STRING) {
 						// End of item / beginning of next item
