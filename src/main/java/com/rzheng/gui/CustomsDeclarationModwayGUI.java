@@ -122,7 +122,7 @@ public class CustomsDeclarationModwayGUI extends JFrame {
 				"Select Product Dimension Chart", "Excel Files", "OPEN", "xls"));
 		
 		// Customs Declaration Template
-		label_cd_template = GUIFactory.createLabel("*\u6e05\u5173\u6a21\u677f: (Modway Customs Declaration Template)", 10, 180, 350, 20);
+		label_cd_template = GUIFactory.createLabel("*\u62a5\u5173\u6a21\u677f : (Modway Customs Declaration Template)", 10, 180, 350, 20);
 		add(label_cd_template);
 
 		textField_cd_template = GUIFactory.createTextField(10, 200, 800, 23);
